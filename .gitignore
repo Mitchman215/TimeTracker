@@ -1,0 +1,13 @@
+
+**/.idea
+
+/backend/target
+**/.mvn-classpath
+**/.classpath
+**/.project
+
+*.prefs
+*.iml
+
+# file created by Finder on macOS
+**.DS_Store**
