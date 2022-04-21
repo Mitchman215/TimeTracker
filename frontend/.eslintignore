@@ -1,0 +1,5 @@
+.eslintrc.js
+tailwind.config.js
+node_modules
+.config
+.build
