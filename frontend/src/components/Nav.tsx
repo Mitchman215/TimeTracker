@@ -13,6 +13,9 @@ export default function Nav() {
       <Link to="/timer" className="bg-white rounded-full p-2 text-brown">
         Timer
       </Link>
+      <Link to="/auth" className="bg-white rounded-full p-2 text-brown">
+        Sign In
+      </Link>
     </nav>
   )
 }

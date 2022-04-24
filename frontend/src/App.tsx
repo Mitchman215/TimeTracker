@@ -1,7 +1,9 @@
 import { Route, Routes } from 'react-router-dom'
+//import SignInScreen from './auth'
 import Nav from './components/Nav'
 import Home from './routes/Home'
 import Timer from './routes/Timer'
+import SignIn from './routes/SignIn'
 
 export default function App() {
   return (
@@ -13,6 +15,7 @@ export default function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="timer" element={<Timer />} />
+          <Route path="auth" element={<SignIn />} />
         </Routes>
       </main>
     </div>
