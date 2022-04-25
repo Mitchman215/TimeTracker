@@ -12,12 +12,3 @@ root.render(
     <App />
   </BrowserRouter>
 )
-//const Home: NextPage = () => {
-//  return (
-//    <Link href="/auth">
-//      <h1>Login: </h1>
-//    </Link>
-//  );
-//}
-
-//export default Home;
