@@ -15,9 +15,12 @@ export default function App() {
   return (
     <div className="bg-brown w-screen h-screen p-4">
       {user && (
-        <header>
-          <Nav />
-        </header>
+        <>
+          <header>
+            <Nav />
+          </header>
+          <p>{user.email}</p>
+        </>
       )}
       <main className="mt-8">
         <Routes>
