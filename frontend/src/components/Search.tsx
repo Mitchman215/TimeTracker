@@ -12,15 +12,6 @@ export default function Search() {
     query(classesRef, where(category, '==', result))
   )
 
-  async function addClass(event: FormEvent) {
-    event.preventDefault()
-
-    await addDoc(classesRef, {
-      name: 'CSCI 0320',
-      department: 'CSCI',
-    })
-  }
-
   return (
     <section className="bg-white rounded-lg p-4">
       <h1 className="text-black font-bold">Search</h1>
