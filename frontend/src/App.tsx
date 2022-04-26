@@ -8,6 +8,7 @@ export default function App() {
   return (
     <div className="bg-brown w-screen h-screen p-4">
       <header>
+        <Nav />
         <Search />
       </header>
       <main className="mt-8">
