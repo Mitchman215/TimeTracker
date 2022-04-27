@@ -5,7 +5,7 @@ import Timer from './routes/Timer'
 
 export default function App() {
   return (
-    <div className="bg-brown w-screen h-screen p-4">
+    <div className="bg-blue-light w-screen h-screen p-4">
       <header>
         <Nav />
       </header>

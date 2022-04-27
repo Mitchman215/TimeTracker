@@ -73,9 +73,11 @@ function TimerComponent(props: TimerProp) {
     `${formatTime(timer.hours)}:${formatTime(timer.minutes)}:${formatTime(timer.seconds)}`
 
   return (
-    <div className="place-content-center">
-      <div id="timer-display">{timerDisplayString}</div>
-      {startPauseResumeButton}
+    <div className="bg-orange-light flex flex-col items-center p-4 rounded-md">
+      <div className="bg-orange-medium text-8xl p-4 m-2 rounded-md shadow-md">
+        {timerDisplayString}
+      </div>
+      <span className="btn-purple">{startPauseResumeButton}</span>
     </div>
   )
 }
