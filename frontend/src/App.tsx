@@ -4,6 +4,7 @@ import Nav from './components/Nav'
 import Home from './routes/Home'
 import Timer from './routes/Timer'
 import Class from './routes/Class'
+import ClassRecords from './routes/ClassRecords'
 import NotFound from './routes/NotFound'
 import SignIn from './components/SignIn'
 
@@ -29,7 +30,8 @@ export default function App() {
             <Route path="/" element={<Home />} />
             <Route path="timer" element={<Timer />} />
             <Route path="auth" element={<SignIn />} />
-            <Route path="/class/:classId" element={<Class />} />
+            <Route path="/class" element={<Class />} />
+            <Route path="/class/:classId" element={<ClassRecords />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </main>
