@@ -6,6 +6,7 @@ import {
   addDoc,
   DocumentData,
   QueryDocumentSnapshot,
+  Timestamp,
 } from 'firebase/firestore'
 import { Box, Stack } from '@mui/material'
 import { useCollection } from 'react-firebase-hooks/firestore'
@@ -30,6 +31,9 @@ export default function Classes() {
   )
   const [newClassName, setNewClassName] = useState('')
   const [newClassDepartment, setNewClassDepartment] = useState('')
+  const [className, setClassName] = useState('')
+  const [timeStamp, setTimeStamp] = useState('')
+  const [duration, setDuration] = useState('')
 
   async function addClass(event: FormEvent) {
     event.preventDefault()
@@ -42,10 +46,13 @@ export default function Classes() {
 
   const docs: QueryDocumentSnapshot<DocumentData>[] | undefined = recValue?.docs
 
-  const newRecords: number[] = []
+  const durationRecords: number[] = []
+  const classRecords: string[] = []
+  const timeRecords: string[] = []
+  const children: string[][] = []
+
   if (docs !== undefined) {
     for (let i = 0; i < docs?.length; i++) {
-      console.log(`true`)
       const jsonString: string = JSON.stringify(docs[i].data())
       const obj = JSON.parse(jsonString)
       const finishStamp = new Date(
@@ -53,27 +60,44 @@ export default function Classes() {
       )
       console.log(obj.duration)
       console.log(finishStamp)
-      newRecords.push(obj.duration / 100)
+      console.log(obj.class_name)
+      durationRecords.push(obj.duration / 100)
+      classRecords.push(obj.class_name)
+      timeRecords.push(finishStamp.toISOString())
+      children.push([
+        (obj.duration / 100).toString(),
+        obj.class_name,
+        finishStamp.toISOString(),
+      ])
     }
   }
-  console.log(newRecords)
-
-  const [durationData, setDurationData] = useState(newRecords)
-  console.log('duration data')
-  console.log(durationData)
+  console.log(durationRecords)
+  console.log(classRecords)
+  console.log(timeRecords)
+  console.log(children)
 
   return (
     <section className="bg-black w-full rounded-lg">
       <h1 className="text-black font-bold">My Classes</h1>
       <Stack direction="row" spacing={0}>
         <Box
-          className="bg-white w-1/2"
+          className="bg-white w-1/2 p-4"
           sx={{
             height: 300,
             borderRadius: 5,
           }}
+        >
+          <div className="text-xl font-bold">Class Name: {className}</div>
+          <div className="text-xl font-bold">Time Stamp: {timeStamp}</div>
+          <div className="text-xl font-bold">Duration: {duration}</div>
+        </Box>
+        <GraphBackground
+          width={300}
+          children={children}
+          setClassName={setClassName}
+          setTimeStamp={setTimeStamp}
+          setDuration={setDuration}
         />
-        <GraphBackground width={300} children={newRecords} timestamps={[]} />
       </Stack>
       <div>
         {recError && <strong>Error: {JSON.stringify(recError)}</strong>}
