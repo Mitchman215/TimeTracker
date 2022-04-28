@@ -1,6 +1,7 @@
 import { Route, Routes } from 'react-router-dom'
 import Nav from './components/Nav'
 import Home from './routes/Home'
+import Stopwatcher from './routes/Stopwatcher'
 import Timer from './routes/Timer'
 
 export default function App() {
@@ -13,6 +14,7 @@ export default function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="timer" element={<Timer />} />
+          <Route path="stopwatcher" element={<Stopwatcher />} />
         </Routes>
       </main>
     </div>

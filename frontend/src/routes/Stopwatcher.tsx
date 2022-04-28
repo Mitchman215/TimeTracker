@@ -1,9 +1,9 @@
-import TimerComponent from '../components/TimerComponent'
+import StopWatch from '../components/StopWatch'
 
-export default function Timer() {
+export default function Stopwatcher() {
   return (
     <main>
-      <TimerComponent
+      <StopWatch
         totalDuration={25 * 60}
         onExpire={() => console.log('TIMER DONE')}
       />
