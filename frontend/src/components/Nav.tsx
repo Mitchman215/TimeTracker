@@ -4,16 +4,16 @@ import clock from '../images/clock.png'
 export default function Nav() {
   return (
     <nav className="flex justify-between items-center">
-      <Link to="/" className="bg-white rounded-full p-2 text-brown font-bold">
+      <Link to="/" className="btn-white">
         Brown Hours Tracking
       </Link>
-      <div className="bg-white rounded-full w-12 h-12">
+      <div className="bg-white rounded-full w-12 h-12 mr-32">
         <img src={clock} />
       </div>
-      <Link to="/timer" className="bg-white rounded-full p-2 text-brown">
+      <Link to="/timer" className="btn-white">
         Timer
       </Link>
-      <Link to="/auth" className="bg-white rounded-full p-2 text-brown">
+      <Link to="/auth" className="btn-white">
         Sign In
       </Link>
     </nav>
