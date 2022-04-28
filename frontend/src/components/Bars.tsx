@@ -1,5 +1,5 @@
 import { Box, Stack } from '@mui/material'
-import { FC, useState } from 'react'
+import { FC } from 'react'
 
 export interface BarsProps {
   size: number
