@@ -31,7 +31,7 @@ enum Stage {
 }
 
 // default pomodoro workflow settings
-const defaultWork = (1 / 3) * 60 // 25 minutes
+const defaultWork = (1 / 5) * 60 // 25 minutes
 const defaultShortBreak = 0.1 * 60 // 5 minutes
 const defaultLongBreak = 0.5 * 60 // 15 minutes
 const numPomsInSet = 2 // after this many work sessions are completed, take long break
@@ -104,9 +104,10 @@ function Pomodoro(props: PomodoroProp) {
 
   return (
     <div className="flex flex-col items-center">
-      <h2 className="bg-orange-light text-white font-semibold px-2 text-2xl">
-        {titleString}
-      </h2>
+      <span className="flex flex-row items-center bg-orange-light text-white font-semibold">
+        <h2 className="px-2 text-2xl">{titleString}</h2>
+        <h3 className="px-2 text-xl">#Poms: {pomsFinished}</h3>
+      </span>
       {timer}
     </div>
   )
