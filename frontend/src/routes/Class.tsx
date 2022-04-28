@@ -1,41 +1,51 @@
-import { useParams } from 'react-router-dom'
-import Records from '../components/records/Records'
-
-import { doc } from 'firebase/firestore'
 import { db } from '../firebase'
-import { useDocumentDataOnce } from 'react-firebase-hooks/firestore'
-import Card from '../components/Card'
+import { collection, query, orderBy, addDoc } from 'firebase/firestore'
+import { useCollection } from 'react-firebase-hooks/firestore'
+import { FormEvent, useState } from 'react'
 
-type ClassURLParams = {
-  classId: string
-}
+export default function Classes() {
+  const classesRef = collection(db, 'classes')
 
-export default function Class() {
-  const { classId } = useParams() as ClassURLParams
-  const user = { id: 'QpDjNV8TwCqg1hWNNtE5' }
+  const [value, loading, error] = useCollection(
+    query(classesRef, orderBy('department'))
+  )
 
-  const classDoc = doc(db, 'classes', classId)
-  const [value, loading, error] = useDocumentDataOnce(classDoc)
+  const [newClassName, setNewClassName] = useState('')
+  const [newClassDepartment, setNewClassDepartment] = useState('')
+
+  async function addClass(event: FormEvent) {
+    event.preventDefault()
+
+    await addDoc(classesRef, {
+      name: newClassName,
+      department: newClassDepartment,
+    })
+  }
 
   return (
-    <>
-      {loading && (
-        <Card>
-          <h1>Loading...</h1>
-        </Card>
-      )}
-      {error && (
-        <Card>
-          <h1>Error loading</h1>
-          <p>{error.message}</p>
-        </Card>
-      )}
-      {!loading && !value && (
-        <Card>
-          <h1>Class "{classId}" does not have any data yet</h1>
-        </Card>
-      )}
-      {value && <Records classDoc={classDoc} userId={user.id} />}
-    </>
+    <section className="bg-white rounded-lg p-4">
+      <h1 className="text-black font-bold">My Classes</h1>
+      <div>
+        {error && <strong>Error: {JSON.stringify(error)}</strong>}
+        {loading && <span>Collection: Loading...</span>}
+        {value &&
+          value.docs.map((doc) => (
+            <p key={doc.id}>{JSON.stringify(doc.data())}, </p>
+          ))}
+      </div>
+      <form onSubmit={addClass}>
+        <input
+          value={newClassDepartment}
+          placeholder="Class department"
+          onChange={(e) => setNewClassDepartment(e.target.value)}
+        />
+        <input
+          value={newClassName}
+          placeholder="Class name"
+          onChange={(e) => setNewClassName(e.target.value)}
+        />
+        <button type="submit">Submit</button>
+      </form>
+    </section>
   )
 }
