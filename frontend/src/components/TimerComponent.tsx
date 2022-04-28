@@ -4,6 +4,8 @@ import { useTimer } from 'react-timer-hook'
 interface TimerProp {
   totalDuration: number // in seconds, must be less than a day (86400 seconds).
   onExpire: () => void
+  autoStart?: boolean
+  onStart?: () => void
 }
 
 // Timer object returned by useTimer hook
@@ -41,13 +43,17 @@ function TimerComponent(props: TimerProp) {
   // hook for timer information
   const timer: Timer = useTimer({
     expiryTimestamp: getExpireTime(),
-    autoStart: false,
+    autoStart: props.autoStart,
     onExpire: props.onExpire,
   })
 
   // state for whether the user has started the timer
   const [started, setStarted] = useState(false)
   function startTimer() {
+    // call the onStart callback if it was passed in
+    if (props.onStart) {
+      props.onStart()
+    }
     timer.restart(getExpireTime())
     setStarted(true)
   }
@@ -91,7 +97,7 @@ function TimerComponent(props: TimerProp) {
 
   function formatTime(value: number): string {
     if (value < 10) {
-      return '0' + value
+      return '0' + value.toString()
     } else {
       return value.toString()
     }
