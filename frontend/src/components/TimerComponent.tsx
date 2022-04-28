@@ -4,6 +4,8 @@ import { useTimer } from 'react-timer-hook'
 interface TimerProp {
   totalDuration: number // in seconds, must be less than a day (86400 seconds).
   onExpire: () => void
+  autoStart?: boolean
+  onStart?: () => void
 }
 
 // Timer object returned by useTimer hook
@@ -31,38 +33,71 @@ function TimerComponent(props: TimerProp) {
     )
   }
 
-  const time = new Date()
-  // time represents when the timer should end
-  time.setSeconds(time.getSeconds() + props.totalDuration)
+  function getExpireTime(): Date {
+    const time = new Date()
+    // time represents when the timer should end
+    time.setSeconds(time.getSeconds() + props.totalDuration)
+    return time
+  }
 
   // hook for timer information
   const timer: Timer = useTimer({
-    expiryTimestamp: time,
-    autoStart: false,
+    expiryTimestamp: getExpireTime(),
+    autoStart: props.autoStart,
     onExpire: props.onExpire,
   })
 
   // state for whether the user has started the timer
   const [started, setStarted] = useState(false)
   function startTimer() {
-    timer.start()
+    // call the onStart callback if it was passed in
+    if (props.onStart) {
+      props.onStart()
+    }
+    timer.restart(getExpireTime())
     setStarted(true)
   }
 
   let startPauseResumeButton: JSX.Element
   if (!started) {
     // start button showed
-    startPauseResumeButton = <button onClick={startTimer}>Start</button>
+    startPauseResumeButton = (
+      <button className="btn-purple" onClick={startTimer}>
+        Start
+      </button>
+    )
   } else if (timer.isRunning) {
     // pause button showed
-    startPauseResumeButton = <button onClick={timer.pause}>Pause</button>
+    startPauseResumeButton = (
+      <button className="btn-purple" onClick={timer.pause}>
+        Pause
+      </button>
+    )
   } else {
-    startPauseResumeButton = <button onClick={timer.resume}>Resume</button>
+    // resume button showed
+    startPauseResumeButton = (
+      <button className="btn-purple" onClick={timer.resume}>
+        Resume
+      </button>
+    )
   }
 
+  const restartButton = (
+    <button
+      hidden={!started}
+      onClick={() => {
+        timer.restart(getExpireTime(), false)
+        setStarted(false)
+      }}
+      className="btn-purple"
+    >
+      Restart
+    </button>
+  )
+
   function formatTime(value: number): string {
-    if (value === 0) {
-      return '00'
+    if (value < 10) {
+      return '0' + value.toString()
     } else {
       return value.toString()
     }
@@ -77,7 +112,10 @@ function TimerComponent(props: TimerProp) {
       <div className="bg-orange-medium text-8xl p-4 m-2 rounded-md shadow-md">
         {timerDisplayString}
       </div>
-      <span className="btn-purple">{startPauseResumeButton}</span>
+      <span>
+        {startPauseResumeButton}
+        {restartButton}
+      </span>
     </div>
   )
 }

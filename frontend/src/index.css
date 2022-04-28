@@ -3,14 +3,14 @@
 @tailwind utilities;
 
 @layer components {
-    .btn-purple {
-      @apply py-2 px-5 bg-purple-medium text-white
-      font-semibold rounded-full shadow-md hover:bg-purple-dark
-      focus:outline-none focus:ring focus:ring-violet-400 focus:ring-opacity-75
-    }
-    .btn-white {
-      @apply bg-white rounded-full py-2 px-5 
-      text-brown shadow-md font-bold
-      hover:bg-silver
-    }
+  .btn-purple {
+    @apply py-2 px-5 mx-2 bg-purple-medium text-white
+    font-semibold rounded-full shadow-md hover:bg-purple-dark
+    focus:outline-none focus:ring focus:ring-violet-400 focus:ring-opacity-75
   }
+  .btn-white {
+    @apply bg-white rounded-full py-2 px-5
+    text-brown shadow-md font-bold
+    hover:bg-silver
+  }
+}

@@ -1,12 +1,9 @@
-import TimerComponent from '../components/TimerComponent'
+import Pomodoro from '../components/Pomodoro'
 
 export default function Timer() {
   return (
     <main>
-      <TimerComponent
-        totalDuration={25 * 60}
-        onExpire={() => console.log('TIMER DONE')}
-      />
+      <Pomodoro user={{}} />
     </main>
   )
 }
