@@ -30,8 +30,8 @@ enum Stage {
   LongBreak,
 }
 
-// default pomodoro workflow settings
-const defaultWork = (1 / 5) * 60 // 25 minutes
+// default pomodoro workflow settings (change to match comments before commiting)
+const defaultWork = 0.25 * 60 // 25 minutes
 const defaultShortBreak = 0.1 * 60 // 5 minutes
 const defaultLongBreak = 0.5 * 60 // 15 minutes
 const numPomsInSet = 2 // after this many work sessions are completed, take long break
@@ -67,40 +67,45 @@ function Pomodoro(props: PomodoroProp) {
     setStage(Stage.NotStarted)
   }
 
-  let titleString = 'loading'
-  let timer: JSX.Element
-  switch (curStage) {
-    case Stage.ShortBreak:
-      titleString = 'Nice! Time for a short break'
-      timer = (
-        <TimerComponent
-          totalDuration={shortBreak}
-          onExpire={onShortBreakFinish}
-          autoStart={true}
-        />
-      )
-      break
-    case Stage.LongBreak:
-      titleString = 'Good job! Time for a long break'
-      timer = (
-        <TimerComponent
-          totalDuration={longBreak}
-          onExpire={onLongBreakFinish}
-          autoStart={true}
-        />
-      )
-      break
-    default:
-      titleString = 'Time to grind'
-      timer = (
-        <TimerComponent
-          totalDuration={workDuration}
-          onExpire={onWorkFinish}
-          autoStart={false}
-          onStart={() => setStage(Stage.Work)}
-        />
-      )
+  function renderNewStage(): [titleString: string, timer: JSX.Element] {
+    let titleString = 'loading'
+    let timer: JSX.Element
+    switch (curStage) {
+      case Stage.ShortBreak:
+        titleString = 'Nice! Time for a short break'
+        timer = (
+          <TimerComponent
+            totalDuration={shortBreak}
+            onExpire={onShortBreakFinish}
+            autoStart={true}
+          />
+        )
+        break
+      case Stage.LongBreak:
+        titleString = 'Good job! Time for a long break'
+        timer = (
+          <TimerComponent
+            totalDuration={longBreak}
+            onExpire={onLongBreakFinish}
+            autoStart={true}
+          />
+        )
+        break
+      default:
+        titleString = 'Time to grind'
+        timer = (
+          <TimerComponent
+            totalDuration={workDuration}
+            onExpire={onWorkFinish}
+            autoStart={false}
+            onStart={() => setStage(Stage.Work)}
+          />
+        )
+    }
+    return [titleString, timer]
   }
+
+  const [titleString, timer] = renderNewStage()
 
   return (
     <div className="flex flex-col items-center">
