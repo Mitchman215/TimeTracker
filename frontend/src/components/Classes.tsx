@@ -7,8 +7,9 @@ import {
   DocumentData,
   QueryDocumentSnapshot,
 } from 'firebase/firestore'
+import { Box, Stack } from '@mui/material'
 import { useCollection } from 'react-firebase-hooks/firestore'
-import { FormEvent, useState } from 'react'
+import { FormEvent, useState, useCallback, SetStateAction } from 'react'
 import GraphBackground from './GraphBackground'
 
 export default function Classes() {
@@ -52,32 +53,28 @@ export default function Classes() {
       )
       console.log(obj.duration)
       console.log(finishStamp)
-      newRecords.push(obj.duration)
+      newRecords.push(obj.duration / 100)
     }
   }
+  console.log(newRecords)
 
-  const [durationData] = useState(newRecords)
+  const [durationData, setDurationData] = useState(newRecords)
+  console.log('duration data')
+  console.log(durationData)
 
   return (
-    <section className="bg-white rounded-lg p-4">
+    <section className="bg-black w-full rounded-lg">
       <h1 className="text-black font-bold">My Classes</h1>
-      <div>
-        {classError && <strong>Error: {JSON.stringify(classError)}</strong>}
-        {classLoading && <span>Collection: Loading...</span>}
-        {classValue &&
-          classValue.docs.map((doc) => (
-            <p key={doc.id}>{JSON.stringify(doc.data())}, </p>
-          ))}
-      </div>
-      <div>
-        {userError && <strong>Error: {JSON.stringify(userError)}</strong>}
-        {userLoading && <span>Collection: Loading...</span>}
-        {userValue &&
-          userValue.docs.map((doc) => (
-            <p key={doc.id}>{JSON.stringify(doc.data())}, </p>
-          ))}
-      </div>
-      <GraphBackground children={durationData}></GraphBackground>
+      <Stack direction="row" spacing={0}>
+        <Box
+          className="bg-white w-1/2"
+          sx={{
+            height: 300,
+            borderRadius: 5,
+          }}
+        />
+        <GraphBackground width={300} children={newRecords} timestamps={[]} />
+      </Stack>
       <div>
         {recError && <strong>Error: {JSON.stringify(recError)}</strong>}
         {recLoading && <span>Collection: Loading...</span>}
