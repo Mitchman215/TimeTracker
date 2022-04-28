@@ -2,7 +2,6 @@ import { Route, Routes } from 'react-router-dom'
 import Nav from './components/Nav'
 import Home from './routes/Home'
 import Timer from './routes/Timer'
-import Search from './components/Search'
 
 export default function App() {
   return (
