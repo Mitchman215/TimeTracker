@@ -6,6 +6,7 @@ interface TimerProp {
   onExpire: () => void
   autoStart?: boolean
   onStart?: () => void
+  bgColor?: string // tailwind-css color (ex: "orange-medium")
 }
 
 // Timer object returned by useTimer hook
@@ -13,7 +14,6 @@ interface Timer {
   seconds: number
   minutes: number
   hours: number
-  days: number
   isRunning: boolean
   start: () => void
   pause: () => void
@@ -106,10 +106,14 @@ function TimerComponent(props: TimerProp) {
   // eslint-disable-next-line prettier/prettier
   const timerDisplayString = 
     `${formatTime(timer.hours)}:${formatTime(timer.minutes)}:${formatTime(timer.seconds)}`
+  const displayBgColor =
+    props.bgColor === undefined ? 'orange-medium' : props.bgColor
 
   return (
     <div className="bg-orange-light flex flex-col items-center p-4 rounded-md">
-      <div className="bg-orange-medium text-8xl p-4 m-2 rounded-md shadow-md">
+      <div
+        className={`bg-${displayBgColor} text-8xl p-4 m-2 rounded-md shadow-md`}
+      >
         {timerDisplayString}
       </div>
       <span>
