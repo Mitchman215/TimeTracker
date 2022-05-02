@@ -1,9 +1,6 @@
 import { GoogleAuthProvider } from 'firebase/auth'
 import { auth } from '../firebase'
-
-import React from 'react'
 import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth'
-//import firebase from "./firebase/clientApp";
 
 // Configure FirebaseUI.S
 const uiConfig = {
@@ -12,7 +9,7 @@ const uiConfig = {
   signInOptions: [GoogleAuthProvider.PROVIDER_ID],
 }
 
-function SignInScreen() {
+function SignIn() {
   return (
     <section className="bg-white rounded-lg p-4 place-content-center">
       <div
@@ -35,4 +32,4 @@ function SignInScreen() {
   )
 }
 
-export default SignInScreen
+export default SignIn
