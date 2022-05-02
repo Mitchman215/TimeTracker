@@ -12,16 +12,7 @@ const uiConfig = {
 function SignIn() {
   return (
     <section className="bg-white rounded-lg p-4 place-content-center">
-      <div
-        style={{
-          maxHeight: 'center',
-          maxWidth: 'center',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}
-      >
+      <div className="flex items-center justify-center flex-col">
         <h1 className="text-black font-bold size-10">Timer Tracker Login:</h1>
         <h1 className="text-black font-bold">
           Please sign in below using your Brown Gmail account

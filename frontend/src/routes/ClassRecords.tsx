@@ -5,14 +5,18 @@ import { doc } from 'firebase/firestore'
 import { db } from '../firebase'
 import { useDocumentDataOnce } from 'react-firebase-hooks/firestore'
 import Card from '../components/Card'
+import { User } from 'firebase/auth'
 
 type ClassURLParams = {
   classId: string
 }
 
-export default function Class() {
+type ClassProps = {
+  user: User
+}
+
+export default function Class({ user }: ClassProps) {
   const { classId } = useParams() as ClassURLParams
-  const user = { id: 'QpDjNV8TwCqg1hWNNtE5' }
 
   const classDoc = doc(db, 'classes', classId)
   const [value, loading, error] = useDocumentDataOnce(classDoc)
@@ -35,7 +39,7 @@ export default function Class() {
           <h1>Class "{classId}" does not have any data yet</h1>
         </Card>
       )}
-      {value && <Records classDoc={classDoc} userId={user.id} />}
+      {value && <Records classDoc={classDoc} userId={user.uid} />}
     </>
   )
 }

@@ -1,4 +1,4 @@
-import { Route, Routes } from 'react-router-dom'
+import { Navigate, Route, Routes } from 'react-router-dom'
 //import SignInScreen from './auth'
 import Nav from './components/Nav'
 import Home from './routes/Home'
@@ -25,9 +25,12 @@ export default function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="timer" element={<Timer />} />
-            <Route path="auth" element={<Auth />} />
+            <Route path="auth" element={<Navigate replace to="/" />} />
             <Route path="class" element={<Class />} />
-            <Route path="class/:classId" element={<ClassRecords />} />
+            <Route
+              path="class/:classId"
+              element={<ClassRecords user={user} />}
+            />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </main>
