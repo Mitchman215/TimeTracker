@@ -11,6 +11,7 @@ import SignIn from './components/SignIn'
 import { useAuthState } from 'react-firebase-hooks/auth'
 import { auth } from './firebase'
 import Auth from './routes/Auth'
+import firebaseui from 'firebaseui'
 
 // some logic here to make sure Nav doesn't render unless logged in.
 export default function App() {
