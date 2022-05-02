@@ -4,48 +4,43 @@ import { FC } from 'react'
 export interface BarsProps {
   size: number
   className: string
-  timeStamp: string
+  startStamp: string
+  finishStamp: string
   setClassName: (className: string) => void
-  setTimeStamp: (className: string) => void
-  setDuration: (className: string) => void
+  setStartStamp: (timeStamp: string) => void
+  setFinishStamp: (finishStamp: string) => void
+  setDuration: (duration: string) => void
 }
 
 const Bars: FC<BarsProps> = ({
   size,
   className,
-  timeStamp,
+  startStamp,
+  finishStamp,
   setClassName,
-  setTimeStamp,
+  setStartStamp,
+  setFinishStamp,
   setDuration,
 }) => {
   return (
-    <Stack className="w-1/4" direction="column">
-      <Box
-        className="bg-white"
-        sx={{
-          height: 275 - size,
-        }}
-      />
-      <Box
-        onMouseEnter={() => {
-          setClassName(className)
-          setTimeStamp(timeStamp)
-          setDuration(size.toString())
-        }}
-        onMouseLeave={() => {
-          setClassName('')
-          setTimeStamp('')
-          setDuration('')
-        }}
-        className="bg-violet-900"
-        sx={{
-          height: size,
-          '&:hover': {
-            opacity: [0.9, 0.8, 0.7],
-          },
-        }}
-      />
-    </Stack>
+    <Box
+      onMouseEnter={() => {
+        setClassName(className)
+        setStartStamp(startStamp)
+        setFinishStamp(finishStamp)
+        setDuration(size.toString())
+      }}
+      onMouseLeave={() => {
+        setClassName('')
+        setStartStamp('')
+        setFinishStamp('')
+        setDuration('')
+      }}
+      className="bg-violet-900 hover:bg-violet-600 w-full"
+      sx={{
+        height: size,
+      }}
+    />
   )
 }
 

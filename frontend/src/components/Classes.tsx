@@ -12,28 +12,26 @@ import { Box, Stack } from '@mui/material'
 import { useCollection } from 'react-firebase-hooks/firestore'
 import { FormEvent, useState, useCallback, SetStateAction } from 'react'
 import GraphBackground from './GraphBackground'
+import GraphLayout from './GraphLayout'
+import DptGraphLayout from './DptGraphLayout'
 
 export default function Classes() {
   const classesRef = collection(db, 'classes')
+  const dptRef = collection(db, 'departments')
   const usersRef = collection(db, 'users')
-  const recordsRef = collection(db, 'users/QpDjNV8TwCqg1hWNNtE5/records/')
+  const userID = 'QpDjNV8TwCqg1hWNNtE5'
+  const recordsRef = collection(db, `users/${userID}/records/`)
 
   const [classValue, classLoading, classError] = useCollection(
-    query(classesRef, orderBy('department'))
+    query(classesRef)
   )
-
+  const [dptValue, dptLoading, dptError] = useCollection(query(dptRef))
   const [userValue, userLoading, userError] = useCollection(
     query(usersRef, orderBy('email'))
   )
-
-  const [recValue, recLoading, recError] = useCollection(
-    query(recordsRef, orderBy('duration'))
-  )
+  const [recValue, recLoading, recError] = useCollection(query(recordsRef))
   const [newClassName, setNewClassName] = useState('')
   const [newClassDepartment, setNewClassDepartment] = useState('')
-  const [className, setClassName] = useState('')
-  const [timeStamp, setTimeStamp] = useState('')
-  const [duration, setDuration] = useState('')
 
   async function addClass(event: FormEvent) {
     event.preventDefault()
@@ -45,10 +43,9 @@ export default function Classes() {
   }
 
   const docs: QueryDocumentSnapshot<DocumentData>[] | undefined = recValue?.docs
+  const dptDocs: QueryDocumentSnapshot<DocumentData>[] | undefined =
+    dptValue?.docs
 
-  const durationRecords: number[] = []
-  const classRecords: string[] = []
-  const timeRecords: string[] = []
   const children: string[][] = []
 
   if (docs !== undefined) {
@@ -58,47 +55,39 @@ export default function Classes() {
       const finishStamp = new Date(
         JSON.parse(JSON.stringify(obj.finish)).seconds * 1000
       )
-      console.log(obj.duration)
-      console.log(finishStamp)
-      console.log(obj.class_name)
-      durationRecords.push(obj.duration / 100)
-      classRecords.push(obj.class_name)
-      timeRecords.push(finishStamp.toISOString())
+      const startStamp = new Date(
+        JSON.parse(JSON.stringify(obj.start)).seconds * 1000
+      )
       children.push([
         (obj.duration / 100).toString(),
         obj.class_name,
-        finishStamp.toISOString(),
+        startStamp.toLocaleString(),
+        finishStamp.toLocaleString(),
       ])
     }
   }
-  console.log(durationRecords)
-  console.log(classRecords)
-  console.log(timeRecords)
   console.log(children)
 
+  const dptChildren: string[][] = []
+
+  if (dptDocs !== undefined) {
+    for (let i = 0; i < dptDocs?.length; i++) {
+      const jsonString: string = JSON.stringify(dptDocs[i].data())
+      const obj = JSON.parse(jsonString)
+      dptChildren.push([
+        obj.daily_average,
+        obj.name,
+        obj.weekly_average,
+        obj.total_time,
+      ])
+    }
+  }
+
   return (
-    <section className="bg-black w-full rounded-lg">
-      <h1 className="text-black font-bold">My Classes</h1>
-      <Stack direction="row" spacing={0}>
-        <Box
-          className="bg-white w-1/2 p-4"
-          sx={{
-            height: 300,
-            borderRadius: 5,
-          }}
-        >
-          <div className="text-xl font-bold">Class Name: {className}</div>
-          <div className="text-xl font-bold">Time Stamp: {timeStamp}</div>
-          <div className="text-xl font-bold">Duration: {duration}</div>
-        </Box>
-        <GraphBackground
-          width={300}
-          children={children}
-          setClassName={setClassName}
-          setTimeStamp={setTimeStamp}
-          setDuration={setDuration}
-        />
-      </Stack>
+    <section className="bg-black w-full rounded-lg p-2">
+      <h1 className="text-white font-bold">My Classes</h1>
+      <GraphLayout children={children} user={userID} />
+      <DptGraphLayout children={dptChildren} />
       <div>
         {recError && <strong>Error: {JSON.stringify(recError)}</strong>}
         {recLoading && <span>Collection: Loading...</span>}
