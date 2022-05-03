@@ -28,11 +28,17 @@ type WeeklyAverage = {
   average: number;
 };
 
+type MonthlyAverage = {
+  month: string;
+  average: number;
+};
+
 type ClassDoc = {
   class: CollectionReference<DocumentData>;
   name: string;
   daily_averages: DailyAverage[];
   weekly_averages: WeeklyAverage[];
+  monthly_averages: MonthlyAverage[];
 };
 
 // whenever a user creates, update the average
@@ -63,6 +69,7 @@ export const createRecord = functions.firestore
             },
           ],
           weekly_averages: [],
+          monthly_averages: [],
         });
       return;
     }
@@ -219,7 +226,7 @@ export const deleteRecord = functions.firestore
   });
 
 // at the beginning of every week update all the weekly everages
-exports.scheduledFunctionCrontab = functions.pubsub
+exports.updateWeeklyAvgs = functions.pubsub
   .schedule("59 23 * * 0")
   .timeZone("America/New_York")
   .onRun(async () => {
@@ -260,12 +267,75 @@ exports.scheduledFunctionCrontab = functions.pubsub
         classDocData.weekly_averages.push({
           start: beginningOfWeek,
           finish: endOfWeek,
-          average: Math.round(total / 7),
+          average: total,
         });
 
         // update (make sure to only keep 4 most recent weeks)
         await classesSnap.docs[i].ref.update({
           weekly_averages: classDocData.weekly_averages.slice(0, 4),
+        });
+      }
+    }
+  });
+
+// at the beginning of every week update all the weekly everages
+exports.updateMonthlyAvgs = functions.pubsub
+  .schedule("0 0 1 * *")
+  .timeZone("America/New_York")
+  .onRun(async () => {
+    const lastMonth = new Date(new Date().setMonth(new Date().getMonth() - 1));
+
+    const beginningOfMonth = new Date(
+      lastMonth.getFullYear(),
+      lastMonth.getMonth(),
+      1
+    );
+
+    const endOfMonth = new Date(
+      lastMonth.getFullYear(),
+      lastMonth.getMonth() + 1,
+      0
+    );
+
+    const lastMonthName = lastMonth.toLocaleString("default", {
+      month: "long",
+    });
+
+    const usersSnap = await admin.firestore().collection("users").get();
+    for (let i = 0; i < usersSnap.docs.length; i++) {
+      const classesSnap = await admin
+        .firestore()
+        .collection(`users/${usersSnap.docs[i].id}/classes`)
+        .get();
+
+      // for each class they have records for
+      for (let j = 0; j < classesSnap.docs.length; j++) {
+        const classDocData = classesSnap.docs[i].data() as ClassDoc;
+
+        // get all the records from this week for the current class this month
+        const monthlyRecords = await admin
+          .firestore()
+          .collection(`users/${usersSnap.docs[i].id}/records`)
+          .where("start", ">=", beginningOfMonth)
+          .where("start", "<=", endOfMonth)
+          .where("class", "==", classDocData.class)
+          .get();
+
+        // sum all the records
+        const total = monthlyRecords.docs.reduce((sum, record) => {
+          const recordData = record.data() as Record;
+          return sum + recordData.duration;
+        }, 0);
+
+        // add this week to the monthly averages
+        classDocData.monthly_averages.push({
+          month: lastMonthName,
+          average: total,
+        });
+
+        // update (make sure to only keep 4 most recent months)
+        await classesSnap.docs[i].ref.update({
+          monthly_averages: classDocData.monthly_averages.slice(0, 4),
         });
       }
     }
