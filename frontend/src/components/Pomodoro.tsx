@@ -1,8 +1,9 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useTimer } from 'react-timer-hook'
+import Settings from './Settings'
 import TimerDisplay, { TimerState } from './TimerDisplay'
 
-interface PomodoroProp {
+export interface PomodoroProp {
   user: {
     pomWork?: number // user's last set work duration
     pomShortBreak?: number // user's last set short break duration
@@ -82,9 +83,9 @@ function Pomodoro(props: PomodoroProp) {
       }
   }
 
+  // returns a date object representing when the timer should expire
   function getExpireTime(): Date {
     const time = new Date()
-    // make time represent when the timer should end
     time.setSeconds(time.getSeconds() + duration)
     return time
   }
@@ -95,6 +96,12 @@ function Pomodoro(props: PomodoroProp) {
     autoStart: curStage !== Stage.NotStarted,
     onExpire: onTimerFinish,
   })
+
+  // workaround to get timer to restart everytime the stage changes
+  useEffect(() => {
+    timerHook.restart(getExpireTime(), curStage !== Stage.NotStarted)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [curStage])
 
   function getTimerState(): TimerState {
     if (curStage === Stage.NotStarted) {
@@ -129,6 +136,7 @@ function Pomodoro(props: PomodoroProp) {
       <span className="flex flex-row items-center bg-orange-light text-white font-semibold">
         <h2 className="px-2 text-2xl">{titleString}</h2>
         <h3 className="px-2 text-xl">#Poms: {pomsFinished}</h3>
+        <Settings user={props.user} />
       </span>
       <TimerDisplay timer={timer} />
     </div>
