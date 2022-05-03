@@ -3,6 +3,7 @@ import {
   collection,
   query,
   addDoc,
+  updateDoc,
   where,
   orderBy,
   QueryDocumentSnapshot,
@@ -28,6 +29,9 @@ export default function Search() {
   const [value, loading, error] = useCollection(
     query(classesRef, where(category, '==', result))
   )
+
+  const recordsRef = collection(db, 'users', 'QpDjNV8TwCqg1hWNNtE5', 'classes')
+  const [userClasses, userLoading, userError] = useCollection(query(recordsRef))
 
   function closestVals(userSearch: string, userCategory: string) {
     const docs: QueryDocumentSnapshot<DocumentData>[] | undefined =
@@ -63,9 +67,16 @@ export default function Search() {
     setSuggestions([distances[0][0], distances[1][0], distances[2][0]])
   }
 
+  function addClass(className: string) {
+    if (userClasses !== undefined) {
+      console.log('Added class')
+      // need to add updating user class functionality here
+    }
+  }
+
   return (
     <section className="bg-white rounded-lg p-4">
-      <h1 className="text-black font-bold">Search</h1>
+      <h1 className="text-black font-bold">Add a Class</h1>
       <select id="category" onChange={(e) => setCategory(e.target.value)}>
         <option value="name">Name</option>
         <option value="department">Department</option>
@@ -76,7 +87,12 @@ export default function Search() {
       />
       {suggestions.map((c: string) => (
         <div>
-          <button type="button">{c}</button>
+          <button
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+            //onClick={addClass(c)}
+          >
+            {c}
+          </button>
         </div>
       ))}
     </section>
