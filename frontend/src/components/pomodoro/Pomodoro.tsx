@@ -4,11 +4,13 @@ import Settings from './Settings'
 import TimerDisplay, { TimerState } from './TimerDisplay'
 
 export interface PomodoroProp {
-  user: {
-    pomWork?: number // user's last set work duration
-    pomShortBreak?: number // user's last set short break duration
-    pomLongBreak?: number // user's last set long break duration
-  }
+  user: User
+}
+
+export interface User {
+  pomWork?: number // user's last set work duration
+  pomShortBreak?: number // user's last set short break duration
+  pomLongBreak?: number // user's last set long break duration
 }
 
 // the possible stages of the pomodoro
@@ -23,7 +25,7 @@ enum Stage {
 const defaultWork = 0.25 * 60 // 25 minutes
 const defaultShortBreak = 0.1 * 60 // 5 minutes
 const defaultLongBreak = 0.5 * 60 // 15 minutes
-const numPomsInSet = 2 // after this many work sessions are completed, take long break
+const defaultNumPoms = 2 // after this many work sessions are completed, take long break
 
 function Pomodoro(props: PomodoroProp) {
   // make sure a given duration is between 0 and 86400 seconds if it's defined.
@@ -41,6 +43,7 @@ function Pomodoro(props: PomodoroProp) {
 
   const [curStage, setStage] = useState<Stage>(Stage.NotStarted)
   const [pomsFinished, setPomsFinished] = useState(0)
+  const [user, setUser] = useState<User>(props.user)
 
   let duration: number
   let titleString: string
@@ -49,12 +52,12 @@ function Pomodoro(props: PomodoroProp) {
     case Stage.NotStarted:
     case Stage.Work:
       titleString = 'Time to grind'
-      duration = verifyDuration(props.user.pomWork, defaultWork)
+      duration = verifyDuration(user.pomWork, defaultWork)
       // when work timer finishes, incremenent the pom # and advance to either short break or long break
       onTimerFinish = () => {
         console.log('Finished work session!')
         setPomsFinished(pomsFinished + 1)
-        if (pomsFinished >= numPomsInSet) {
+        if (pomsFinished >= defaultNumPoms) {
           // user has finished set of pomodoros, take a long break
           setStage(Stage.LongBreak)
           setPomsFinished(0)
@@ -66,7 +69,7 @@ function Pomodoro(props: PomodoroProp) {
       break
     case Stage.ShortBreak:
       titleString = 'Nice! Time for a short break'
-      duration = verifyDuration(props.user.pomShortBreak, defaultShortBreak)
+      duration = verifyDuration(user.pomShortBreak, defaultShortBreak)
       // when short break timer finishes, advance to work stage
       onTimerFinish = () => {
         console.log('Short break done!')
@@ -75,7 +78,7 @@ function Pomodoro(props: PomodoroProp) {
       break
     case Stage.LongBreak:
       titleString = 'Good job! Time for a long break'
-      duration = verifyDuration(props.user.pomLongBreak, defaultLongBreak)
+      duration = verifyDuration(user.pomLongBreak, defaultLongBreak)
       // when long break timer finishes, reset to not started stage
       onTimerFinish = () => {
         console.log('Long break done!')
@@ -136,7 +139,7 @@ function Pomodoro(props: PomodoroProp) {
       <span className="flex flex-row items-center bg-orange-light text-white font-semibold">
         <h2 className="px-2 text-2xl">{titleString}</h2>
         <h3 className="px-2 text-xl">#Poms: {pomsFinished}</h3>
-        <Settings user={props.user} />
+        <Settings user={props.user} setUser={setUser} />
       </span>
       <TimerDisplay timer={timer} />
     </div>
