@@ -1,4 +1,4 @@
-import Pomodoro from '../components/Pomodoro'
+import Pomodoro from '../components/pomodoro/Pomodoro'
 
 export default function Timer() {
   return (

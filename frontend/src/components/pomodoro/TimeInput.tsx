@@ -4,9 +4,11 @@ interface TimeInputProp {
   setValue: (newVal: number) => void
 }
 
+// A time input field for the pomodoro settings form
 function TimeInput(props: TimeInputProp) {
   function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
     const newVal = parseInt(event.target.value)
+    // fix so empty input is accepted as well
     if (newVal > 0 && newVal < 1440) {
       props.setValue(newVal)
     }

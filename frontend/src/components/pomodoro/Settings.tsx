@@ -7,12 +7,19 @@ import TimeInput from './TimeInput'
 // ensures background content is hidden for screen readers when settings is open
 Modal.setAppElement('#root')
 
-// Component for the
+// Component for the settings modal for the Pomodoro Timer.
+// Allows the user to change the timer duration and other setting
 function Settings(props: PomodoroProp) {
   const [isOpen, setIsOpen] = useState(false)
   const [workTime, setWorkTime] = useState(25)
   const [shortBreakTime, setShortBreakTime] = useState(5)
   const [longBreakTime, setLongBreakTime] = useState(15)
+
+  // saves the settings to the firestore database and updates the user data
+  function saveSettings() {
+    console.log('Saving settings')
+    // TODO integrate and finish
+  }
 
   return (
     <div>
@@ -40,10 +47,7 @@ function Settings(props: PomodoroProp) {
           <button className="btn-purple" onClick={() => setIsOpen(false)}>
             Close
           </button>
-          <button
-            className="btn-purple"
-            onClick={() => console.log('Saving settings')}
-          >
+          <button className="btn-purple" onClick={saveSettings}>
             Save
           </button>
         </div>

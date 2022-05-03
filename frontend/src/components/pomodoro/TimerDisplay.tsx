@@ -23,6 +23,7 @@ interface TimerDisplayProp {
 
 // stateless component that displays a timer object
 export default function TimerDisplay(props: TimerDisplayProp) {
+  // formats a number representing a time correctly
   function formatTime(value: number): string {
     if (value < 10) {
       return '0' + value.toString()
