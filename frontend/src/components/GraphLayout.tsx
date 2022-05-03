@@ -16,7 +16,7 @@ const GraphLayout: FC<GraphLayoutProps> = ({ children, user }) => {
   return (
     <Stack direction="row" spacing={5}>
       <Box
-        className="bg-white w-1/2 p-4 rounded-lg"
+        className="bg-white w-1/3 p-4 rounded-lg"
         sx={{
           height: 300,
         }}

@@ -13,12 +13,11 @@ import { useCollection } from 'react-firebase-hooks/firestore'
 import { FormEvent, useState, useCallback, SetStateAction } from 'react'
 import GraphBackground from './GraphBackground'
 import GraphLayout from './GraphLayout'
-import DptGraphLayout from './DptGraphLayout'
+import CompGraphLayout from './CompGraphLayout'
 
 export default function Classes() {
   const classesRef = collection(db, 'classes')
   const dptRef = collection(db, 'departments')
-  const usersRef = collection(db, 'users')
   const userID = 'QpDjNV8TwCqg1hWNNtE5'
   const recordsRef = collection(db, `users/${userID}/records/`)
 
@@ -26,9 +25,6 @@ export default function Classes() {
     query(classesRef)
   )
   const [dptValue, dptLoading, dptError] = useCollection(query(dptRef))
-  const [userValue, userLoading, userError] = useCollection(
-    query(usersRef, orderBy('email'))
-  )
   const [recValue, recLoading, recError] = useCollection(query(recordsRef))
   const [newClassName, setNewClassName] = useState('')
   const [newClassDepartment, setNewClassDepartment] = useState('')
@@ -45,6 +41,8 @@ export default function Classes() {
   const docs: QueryDocumentSnapshot<DocumentData>[] | undefined = recValue?.docs
   const dptDocs: QueryDocumentSnapshot<DocumentData>[] | undefined =
     dptValue?.docs
+  const classDocs: QueryDocumentSnapshot<DocumentData>[] | undefined =
+    classValue?.docs
 
   const children: string[][] = []
 
@@ -79,15 +77,33 @@ export default function Classes() {
         obj.name,
         obj.weekly_average,
         obj.total_time,
+        'false',
+      ])
+    }
+  }
+
+  const classChildren: string[][] = []
+
+  if (classDocs !== undefined) {
+    for (let i = 0; i < classDocs?.length; i++) {
+      const jsonString: string = JSON.stringify(classDocs[i].data())
+      const obj = JSON.parse(jsonString)
+      classChildren.push([
+        obj.daily_average,
+        obj.name,
+        obj.weekly_average,
+        obj.total_time,
+        'false',
       ])
     }
   }
 
   return (
-    <section className="bg-black w-full rounded-lg p-2">
+    <section className="bg-black w-full rounded-lg p-10">
       <h1 className="text-white font-bold">My Classes</h1>
       <GraphLayout children={children} user={userID} />
-      <DptGraphLayout children={dptChildren} />
+      <CompGraphLayout children={dptChildren} type={'Department'} />
+      <CompGraphLayout children={classChildren} type={'Class'} />
       <div>
         {recError && <strong>Error: {JSON.stringify(recError)}</strong>}
         {recLoading && <span>Collection: Loading...</span>}

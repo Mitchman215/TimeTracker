@@ -1,23 +1,23 @@
 import { Box, Stack } from '@mui/material'
 import { FC, useState } from 'react'
 
-export interface DptBarsProps {
-  dptName: string
+export interface CompBarsProps {
+  name: string
   dailyAvg: number
   weeklyAvg: number
   totalTime: number
-  setDptName: (dpt: string) => void
+  setName: (name: string) => void
   setDailyAvg: (time: string) => void
   setWeeklyAvg: (time: string) => void
   setTotalTime: (time: string) => void
 }
 
-const DptBars: FC<DptBarsProps> = ({
-  dptName,
+const CompBars: FC<CompBarsProps> = ({
+  name,
   dailyAvg,
   weeklyAvg,
   totalTime,
-  setDptName,
+  setName,
   setDailyAvg,
   setWeeklyAvg,
   setTotalTime,
@@ -25,11 +25,12 @@ const DptBars: FC<DptBarsProps> = ({
   const [backgroundColorTop, setBGT] = useState('#D8B4FE')
   const [backgroundColorM, setBGM] = useState('#9333EA')
   const [backgroundColorBot, setBGB] = useState('#581C87')
+  console.log('rerender')
   return (
     <div
       className="flex flex-col items-end w-full"
       onMouseEnter={() => {
-        setDptName(dptName)
+        setName(name)
         setDailyAvg(dailyAvg.toString())
         setWeeklyAvg(weeklyAvg.toString())
         setTotalTime(totalTime.toString())
@@ -38,7 +39,7 @@ const DptBars: FC<DptBarsProps> = ({
         setBGB('#171717')
       }}
       onMouseLeave={() => {
-        setDptName('')
+        setName('')
         setDailyAvg('')
         setWeeklyAvg('')
         setTotalTime('')
@@ -48,23 +49,39 @@ const DptBars: FC<DptBarsProps> = ({
       }}
     >
       <Box
-        className="w-full"
+        className="w-full items-center justify-center flex text-xs font-bold"
         sx={{
-          height: totalTime - weeklyAvg - dailyAvg,
+          height: 3,
           backgroundColor: backgroundColorTop,
         }}
       />
+      <div className="w-full items-center justify-center flex text-xs font-bold">
+        Total Time
+      </div>
       <Box
         className="w-full"
         sx={{
-          height: weeklyAvg - dailyAvg,
+          height: totalTime - weeklyAvg * 5 - dailyAvg * 5,
+          backgroundColor: backgroundColorTop,
+        }}
+      />
+      <div className="w-full items-center justify-center flex text-xs font-bold">
+        Weekly Average (5x magnified)
+      </div>
+      <Box
+        className="w-full"
+        sx={{
+          height: weeklyAvg * 5 - dailyAvg * 5,
           backgroundColor: backgroundColorM,
         }}
       />
+      <div className="w-full items-center justify-center flex text-xs font-bold">
+        Daily Average (5x magnified)
+      </div>
       <Box
         className="w-full"
         sx={{
-          height: dailyAvg,
+          height: dailyAvg * 5,
           backgroundColor: backgroundColorBot,
         }}
       />
@@ -72,4 +89,4 @@ const DptBars: FC<DptBarsProps> = ({
   )
 }
 
-export default DptBars
+export default CompBars
