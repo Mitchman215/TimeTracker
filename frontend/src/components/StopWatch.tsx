@@ -1,9 +1,11 @@
-import { ReactChild, ReactFragment, ReactPortal, useState } from 'react'
+import { useState } from 'react'
 import { useStopwatch } from 'react-timer-hook';
 import { useCollection } from 'react-firebase-hooks/firestore'
 import { db } from '../firebase'
 import { collection, query, orderBy, addDoc, where } from 'firebase/firestore'
-import { doc, getDoc } from "firebase/firestore";
+import { doc } from "firebase/firestore";
+
+//enrolled classes must have a name field and an id field that matches their reference id
 
 
 interface TimerProp {
@@ -61,7 +63,7 @@ function StopWatch(props: TimerProp) {
       class_name: the_class,
       start: startTime,
       finish: finishTime,
-      duration: Math.round((finishTime.getTime() - startTime.getTime()) / 1000),
+      duration: (hours * 3600) + (minutes * 60) + seconds,
     })
   }
 
@@ -114,12 +116,11 @@ function StopWatch(props: TimerProp) {
     startPauseResumeButton = <button onClick={start}>Resume</button>
   }
 
-  var minutesStudied = 0;
-
   //when log study time is pressed
   function logRecord() {
     addRecord()
-    minutesStudied = (hours * 3600) + (minutes * 60) + seconds
+    reset(undefined, false)
+    setStarted(false)
   }
 
   //track currently selected class
@@ -131,6 +132,7 @@ function StopWatch(props: TimerProp) {
   }
 
   function handleReset() {
+    reset(undefined, false)
     setStarted(false)
   }
 
@@ -148,9 +150,9 @@ function StopWatch(props: TimerProp) {
       </div>
       <span className="btn-purple">{startPauseResumeButton}</span>
       &nbsp;
-      <span className="btn-purple">{<button onClickCapture={handleReset} onClick={logRecord}>Log Study Time</button>}</span>
+      <span className="btn-purple">{<button onClick={logRecord}>Log Study Time</button>}</span>
       &nbsp;
-      <span className="btn-purple">{<button onClickCapture={handleReset} onClick={reset}>Reset</button>}</span>
+      <span className="btn-purple">{<button onClick={handleReset}>Reset</button>}</span>
       &nbsp;
       <p>Current Class:</p>
       <select
