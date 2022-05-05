@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useTimer } from 'react-timer-hook'
+import usePrompt from '../../hooks/usePrompt'
 import Settings from './Settings'
 import TimerDisplay, { TimerState } from './TimerDisplay'
 
@@ -134,6 +135,12 @@ function Pomodoro(props: PomodoroProp) {
     restart: () => timerHook.restart(getExpireTime()),
     state: getTimerState(),
   }
+
+  // when the user tries to navigate away, if the timer is running, ask them to confirm
+  usePrompt(
+    'Are you sure you want to leave without logging your time?',
+    timer.state === TimerState.Running || timer.state === TimerState.Paused
+  )
 
   return (
     <div className="flex flex-col items-center">
