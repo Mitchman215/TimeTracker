@@ -2,30 +2,15 @@ import { useState } from 'react'
 import { useStopwatch } from 'react-timer-hook'
 import { useCollection } from 'react-firebase-hooks/firestore'
 import { db } from '../firebase'
-import { collection, query, orderBy, addDoc, where } from 'firebase/firestore'
+import { collection, query, addDoc } from 'firebase/firestore'
 import { doc } from 'firebase/firestore'
+import { formatTime } from './pomodoro/TimerDisplay'
 
 //enrolled classes must have a name field and an id field that matches their reference id
 
-interface TimerProp {
-  totalDuration: number // in seconds, must be less than a day (86400 seconds).
-  onExpire: () => void
-}
-
-function StopWatch(props: TimerProp) {
-  // make sure duration is valid (between 0 and 86400, non-inclusive)
-  if (props.totalDuration >= 86400) {
-    throw new Error(
-      `Cannot set timer for ${props.totalDuration} seconds because it's longer than a day (86400 seconds)`
-    )
-  } else if (props.totalDuration <= 0) {
-    throw new Error(
-      `Cannot set timer for ${props.totalDuration} seconds because it's negative or zero`
-    )
-  }
-
+function StopWatch() {
   //Stopwatch object
-  const { seconds, minutes, hours, days, isRunning, start, pause, reset } =
+  const { seconds, minutes, hours, isRunning, start, pause, reset } =
     useStopwatch({ autoStart: false })
 
   //user id (will be changed the the current logged in user once integrated)
@@ -50,15 +35,6 @@ function StopWatch(props: TimerProp) {
       const obj = JSON.parse(jsonString)
       classes.push(obj.name)
       classMap.set(obj.name, obj.id)
-    }
-  }
-
-  //Clean up timer display
-  function formatTime(time: number): string {
-    if (time === 0) {
-      return '00'
-    } else {
-      return time.toString()
     }
   }
 

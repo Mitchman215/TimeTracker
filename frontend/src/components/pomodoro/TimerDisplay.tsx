@@ -21,17 +21,17 @@ interface TimerDisplayProp {
   displayBgColor?: string // tailwind-css color name that dictates the color behind the display time
 }
 
+// formats a number representing a time correctly
+export function formatTime(time: number): string {
+  if (time < 10) {
+    return '0' + time.toString()
+  } else {
+    return time.toString()
+  }
+}
+
 // stateless component that displays a timer object
 export default function TimerDisplay(props: TimerDisplayProp) {
-  // formats a number representing a time correctly
-  function formatTime(value: number): string {
-    if (value < 10) {
-      return '0' + value.toString()
-    } else {
-      return value.toString()
-    }
-  }
-
   const timerDisplayString = `${formatTime(props.timer.hours)}:${formatTime(
     props.timer.minutes
   )}:${formatTime(props.timer.seconds)}`
