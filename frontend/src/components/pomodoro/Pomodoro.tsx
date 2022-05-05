@@ -93,18 +93,19 @@ function Pomodoro(props: PomodoroProp) {
     return time
   }
 
-  console.log('re-render w/ stage: ' + curStage)
   const timerHook = useTimer({
     expiryTimestamp: getExpireTime(),
     autoStart: curStage !== Stage.NotStarted,
     onExpire: onTimerFinish,
   })
+  // console.log(`re-render w/ stage: ${curStage}; timer duration: ${duration}`)
+  // console.log(timerHook)
 
   // workaround to get timer to restart everytime the stage changes
   useEffect(() => {
     timerHook.restart(getExpireTime(), curStage !== Stage.NotStarted)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [curStage])
+  }, [curStage, user])
 
   function getTimerState(): TimerState {
     if (curStage === Stage.NotStarted) {
@@ -139,7 +140,9 @@ function Pomodoro(props: PomodoroProp) {
       <span className="flex flex-row items-center bg-orange-light text-white font-semibold">
         <h2 className="px-2 text-2xl">{titleString}</h2>
         <h3 className="px-2 text-xl">#Poms: {pomsFinished}</h3>
-        <Settings user={props.user} setUser={setUser} />
+        {curStage === Stage.NotStarted && (
+          <Settings user={props.user} setUser={setUser} />
+        )}
       </span>
       <TimerDisplay timer={timer} />
     </div>
