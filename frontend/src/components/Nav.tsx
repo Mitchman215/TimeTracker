@@ -15,6 +15,9 @@ export default function Nav() {
         </div>
       </div>
       <div className="flex justify-end col-span-1">
+        <Link to="/stopwatcher" className="btn-white">
+          Start Studying
+        </Link>
         <Link to="/timer" className="btn-white">
           Timer
         </Link>
