@@ -1,9 +1,9 @@
-import { FC, useState } from 'react'
-import { Box, Button, Stack } from '@mui/material'
+import { FC } from 'react'
 import Bars from './Bars'
+import { RecordClassDoc } from '../../types'
 
 export interface GraphBackgroundProps {
-  children: string[][]
+  children: RecordClassDoc[]
   user: string
   setClassName: (className: string) => void
   setStartStamp: (timeStamp: string) => void
@@ -27,13 +27,13 @@ const GraphBackground: FC<GraphBackgroundProps> = ({
           <div className="font-bold text-xs -rotate-90">Duration(s)</div>
         </div>
         <div className="flex w-full h-full gap-2 items-end border border-black border-t-0 border-l-1 border-r-0 border-b-1">
-          {children.map((child: string[]) => {
+          {children.map((child: RecordClassDoc) => {
             return (
               <Bars
-                size={parseInt(child[0])}
-                className={child[1]}
-                startStamp={child[2]}
-                finishStamp={child[3]}
+                size={child.duration / 100}
+                className={child.class_name}
+                startStamp={child.start.toDate().toLocaleString()}
+                finishStamp={child.finish.toDate().toLocaleString()}
                 setClassName={setClassName}
                 setStartStamp={setStartStamp}
                 setFinishStamp={setFinishStamp}

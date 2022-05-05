@@ -2,30 +2,28 @@ import { db } from '../firebase'
 import {
   collection,
   query,
-  orderBy,
   addDoc,
   DocumentData,
   QueryDocumentSnapshot,
-  Timestamp,
 } from 'firebase/firestore'
-import { Box, Stack } from '@mui/material'
 import { useCollection } from 'react-firebase-hooks/firestore'
-import { FormEvent, useState, useCallback, SetStateAction } from 'react'
-import GraphBackground from './GraphBackground'
-import GraphLayout from './GraphLayout'
-import CompGraphLayout from './CompGraphLayout'
+import { FormEvent, useState } from 'react'
+import GraphLayout from './user_records/GraphLayout'
+import CompGraphLayout from './dpt_class_comparison/CompGraphLayout'
+import UserClassMenu from './user_comparisons/UserClassMenu'
+import { DptClassDoc, RecordClassDoc, UserClassDoc } from '../types'
 
 export default function Classes() {
   const classesRef = collection(db, 'classes')
   const dptRef = collection(db, 'departments')
   const userID = 'QpDjNV8TwCqg1hWNNtE5'
   const recordsRef = collection(db, `users/${userID}/records/`)
+  const userClassesRef = collection(db, `users/${userID}/classes/`)
 
-  const [classValue, classLoading, classError] = useCollection(
-    query(classesRef)
-  )
-  const [dptValue, dptLoading, dptError] = useCollection(query(dptRef))
+  const [classValue] = useCollection(query(classesRef))
+  const [dptValue] = useCollection(query(dptRef))
   const [recValue, recLoading, recError] = useCollection(query(recordsRef))
+  const [userClassesValue] = useCollection(query(userClassesRef))
   const [newClassName, setNewClassName] = useState('')
   const [newClassDepartment, setNewClassDepartment] = useState('')
 
@@ -43,58 +41,61 @@ export default function Classes() {
     dptValue?.docs
   const classDocs: QueryDocumentSnapshot<DocumentData>[] | undefined =
     classValue?.docs
+  const userClassesDocs: QueryDocumentSnapshot<DocumentData>[] | undefined =
+    userClassesValue?.docs
 
-  const children: string[][] = []
+  const children: RecordClassDoc[] = []
 
   if (docs !== undefined) {
     for (let i = 0; i < docs?.length; i++) {
-      const jsonString: string = JSON.stringify(docs[i].data())
-      const obj = JSON.parse(jsonString)
-      const finishStamp = new Date(
-        JSON.parse(JSON.stringify(obj.finish)).seconds * 1000
-      )
-      const startStamp = new Date(
-        JSON.parse(JSON.stringify(obj.start)).seconds * 1000
-      )
-      children.push([
-        (obj.duration / 100).toString(),
-        obj.class_name,
-        startStamp.toLocaleString(),
-        finishStamp.toLocaleString(),
-      ])
+      try {
+        const child: RecordClassDoc = docs[i].data() as RecordClassDoc
+        children.push(child)
+      } catch (error) {
+        console.log(error)
+      }
     }
   }
-  console.log(children)
 
-  const dptChildren: string[][] = []
+  const dptChildren: DptClassDoc[] = []
 
   if (dptDocs !== undefined) {
     for (let i = 0; i < dptDocs?.length; i++) {
-      const jsonString: string = JSON.stringify(dptDocs[i].data())
-      const obj = JSON.parse(jsonString)
-      dptChildren.push([
-        obj.daily_average,
-        obj.name,
-        obj.weekly_average,
-        obj.total_time,
-        'false',
-      ])
+      try {
+        const dptChild: DptClassDoc = dptDocs[i].data() as DptClassDoc
+        dptChild.added = false
+        dptChildren.push(dptChild)
+      } catch (error) {
+        console.log(error)
+      }
     }
   }
 
-  const classChildren: string[][] = []
+  const classChildren: DptClassDoc[] = []
 
   if (classDocs !== undefined) {
     for (let i = 0; i < classDocs?.length; i++) {
-      const jsonString: string = JSON.stringify(classDocs[i].data())
-      const obj = JSON.parse(jsonString)
-      classChildren.push([
-        obj.daily_average,
-        obj.name,
-        obj.weekly_average,
-        obj.total_time,
-        'false',
-      ])
+      try {
+        const classChild: DptClassDoc = classDocs[i].data() as DptClassDoc
+        classChild.added = false
+        classChildren.push(classChild)
+      } catch (error) {
+        console.log(error)
+      }
+    }
+  }
+
+  const userClassChildren: UserClassDoc[] = []
+
+  if (userClassesDocs !== undefined) {
+    for (let i = 0; i < userClassesDocs?.length; i++) {
+      try {
+        const userClassDoc = userClassesDocs[i].data() as UserClassDoc
+        userClassDoc.added = false
+        userClassChildren.push(userClassDoc)
+      } catch (error) {
+        console.log('no scraping information')
+      }
     }
   }
 
@@ -104,6 +105,7 @@ export default function Classes() {
       <GraphLayout children={children} user={userID} />
       <CompGraphLayout children={dptChildren} type={'Department'} />
       <CompGraphLayout children={classChildren} type={'Class'} />
+      <UserClassMenu children={userClassChildren} />
       <div>
         {recError && <strong>Error: {JSON.stringify(recError)}</strong>}
         {recLoading && <span>Collection: Loading...</span>}

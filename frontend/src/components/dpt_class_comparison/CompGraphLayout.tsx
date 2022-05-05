@@ -1,10 +1,11 @@
-import { Box, Stack } from '@mui/material'
+import { Box } from '@mui/material'
 import React, { FC, useState } from 'react'
+import { DptClassDoc } from '../../types'
 import CompGraphBackground from './CompGraphBackground'
 import ModalBar from './ModalBar'
 
 export interface CompGraphLayoutProps {
-  children: string[][]
+  children: DptClassDoc[]
   type: string
 }
 
@@ -14,12 +15,14 @@ const CompGraphLayout: FC<CompGraphLayoutProps> = ({ children, type }) => {
   const [weeklyAvg, setWeeklyAvg] = useState('')
   const [totalTime, setTotalTime] = useState('')
   const [modal, setModal] = useState(false)
-  const empty: string[][] = []
+  const empty: DptClassDoc[] = []
   const [editChildren, setEditChildren] = useState(empty)
 
   function closeModal(): void {
     setModal(false)
   }
+
+  console.log(editChildren)
 
   return (
     <div className="flex flex-row gap-10">
@@ -49,10 +52,10 @@ const CompGraphLayout: FC<CompGraphLayoutProps> = ({ children, type }) => {
             Select {type} to Compare
           </div>
           <div className="flex flex-col p-4 w-full gap-2">
-            {children.map((child: string[]) => {
+            {children.map((child: DptClassDoc) => {
               return (
                 <ModalBar
-                  name={child[1]}
+                  name={child.name}
                   child={child}
                   setEditChildren={setEditChildren}
                   children={editChildren.slice()}

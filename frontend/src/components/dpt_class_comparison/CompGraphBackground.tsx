@@ -1,9 +1,9 @@
-import { FC, useState } from 'react'
-import { Box, Button, Stack } from '@mui/material'
+import { FC } from 'react'
 import CompBars from './CompBars'
+import { DptClassDoc } from '../../types'
 
 export interface CompGraphBackgroundProps {
-  children: string[][]
+  children: DptClassDoc[]
   setName: (name: string) => void
   setDailyAvg: (timeStamp: string) => void
   setWeeklyAvg: (timeStamp: string) => void
@@ -24,7 +24,6 @@ const CompGraphBackground: FC<CompGraphBackgroundProps> = ({
   function changeModal(): void {
     setModal(true)
   }
-  console.log('render')
 
   return (
     <div className="bg-white w-2/3 py-2 flex items-center flex-col relative justify-center rounded-lg">
@@ -41,13 +40,13 @@ const CompGraphBackground: FC<CompGraphBackgroundProps> = ({
           <div className="font-bold text-xs -rotate-90">Duration(hr)</div>
         </div>
         <div className="flex w-full h-full gap-2 items-end border border-black border-t-0 border-l-1 border-r-0 border-b-1">
-          {children.map((child: string[]) => {
+          {children.map((child: DptClassDoc) => {
             return (
               <CompBars
-                dailyAvg={parseInt(child[0])}
-                name={child[1]}
-                weeklyAvg={parseInt(child[2])}
-                totalTime={parseInt(child[3])}
+                dailyAvg={parseInt(child.daily_average)}
+                name={child.name}
+                weeklyAvg={parseInt(child.weekly_average)}
+                totalTime={parseInt(child.total_time)}
                 setName={setName}
                 setDailyAvg={setDailyAvg}
                 setWeeklyAvg={setWeeklyAvg}

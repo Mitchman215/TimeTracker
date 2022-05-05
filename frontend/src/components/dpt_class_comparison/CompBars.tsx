@@ -1,4 +1,4 @@
-import { Box, Stack } from '@mui/material'
+import { Box } from '@mui/material'
 import { FC, useState } from 'react'
 
 export interface CompBarsProps {
@@ -25,7 +25,6 @@ const CompBars: FC<CompBarsProps> = ({
   const [backgroundColorTop, setBGT] = useState('#D8B4FE')
   const [backgroundColorM, setBGM] = useState('#9333EA')
   const [backgroundColorBot, setBGB] = useState('#581C87')
-  console.log('rerender')
   return (
     <div
       className="flex flex-col items-end w-full"
