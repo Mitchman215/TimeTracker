@@ -22,8 +22,6 @@ const CompGraphLayout: FC<CompGraphLayoutProps> = ({ children, type }) => {
     setModal(false)
   }
 
-  console.log(editChildren)
-
   return (
     <div className="flex flex-row gap-10">
       {!modal && (
