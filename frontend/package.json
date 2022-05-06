@@ -54,11 +54,8 @@
   },
   "devDependencies": {
     "@types/react-datetime-picker": "^3.4.1",
-<<<<<<< HEAD
     "@types/node": "^17.0.25",
-=======
     "@types/react-modal": "^3.13.1",
->>>>>>> origin/pom-timer
     "@typescript-eslint/eslint-plugin": "^5.20.0",
     "@typescript-eslint/parser": "^5.20.0",
     "autoprefixer": "^10.4.4",
