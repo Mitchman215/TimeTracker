@@ -20,6 +20,8 @@
     "react-dom": "^18.0.0",
     "react-firebase-hooks": "^5.0.3",
     "react-firebaseui": "^6.0.0",
+    "react-icons": "^4.3.1",
+    "react-modal": "^3.15.1",
     "react-router-dom": "^6.3.0",
     "react-scripts": "5.0.1",
     "react-timer-hook": "^3.0.5",
@@ -52,7 +54,11 @@
   },
   "devDependencies": {
     "@types/react-datetime-picker": "^3.4.1",
+<<<<<<< HEAD
     "@types/node": "^17.0.25",
+=======
+    "@types/react-modal": "^3.13.1",
+>>>>>>> origin/pom-timer
     "@typescript-eslint/eslint-plugin": "^5.20.0",
     "@typescript-eslint/parser": "^5.20.0",
     "autoprefixer": "^10.4.4",
