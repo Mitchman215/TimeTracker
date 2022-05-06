@@ -1,8 +1,5 @@
-import { addDoc, collection, doc, query } from 'firebase/firestore'
 import { useEffect, useState } from 'react'
-import { useCollection } from 'react-firebase-hooks/firestore'
-import { db } from '../../firebase'
-import { getCurrentUser, UserProp } from '../../models/User'
+import { UserProp } from '../../models/User'
 import Pomodoro from './pomodoro/Pomodoro'
 import StopWatch from './StopWatch'
 
@@ -16,6 +13,23 @@ interface TrackerProp {
 
 // Component for tracking time, either via the stopwatch or pomodoro timer
 function TimeTracker(props: UserProp) {
+  // state that controls which classes the user can study for
+  const [allClasses, setAllClasses] = useState<string[]>([])
+
+  // gets and sets the current user's classes when this component first renders
+  useEffect(() => {
+    props.user.getClasses().then((classes) => setAllClasses(classes))
+  }, [props.user])
+
+  // track currently selected class
+  const [currentClass, setClass] = useState(allClasses[0])
+
+  // to be called when classSelector dropdown changes
+  const handleClassSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setClass(e.target.value)
+    console.log(currentClass)
+  }
+
   // the available time tracking modes
   enum Mode {
     PomTimer = 'Pomodoro Timer',
@@ -63,50 +77,20 @@ function TimeTracker(props: UserProp) {
   let selectedTracker: JSX.Element
   switch (curMode) {
     case Mode.PomTimer:
-      selectedTracker = <Pomodoro user={{}} />
+      selectedTracker = (
+        <Pomodoro
+          user={props.user}
+          currentClass={currentClass}
+          currentAssignment={''}
+        />
+      )
       break
     case Mode.Stopwatch:
       selectedTracker = <StopWatch />
       break
   }
 
-  // // maybe change around following lines so user data is passed in as opposed to queried numerous times
-  // //user id (will be changed the the current logged in user once integrated)
-  // const userId = 'QpDjNV8TwCqg1hWNNtE5'
-  // // get a reference to the users' existing time records
-  // const recordsRef = collection(db, 'users', userId, 'records')
-
-  // //get names of all enrolled classes
-  // const userClassesRef = collection(db, 'users', userId, 'classes')
-  // const [value, loading, error] = useCollection(query(userClassesRef))
-
-  // const docs = value?.docs
-  // const classes: string[] = []
-  // const classMap = new Map()
-  // if (docs !== undefined) {
-  //   for (let i = 0; i < docs?.length; i++) {
-  //     const jsonString: string = JSON.stringify(docs[i].data())
-  //     const obj = JSON.parse(jsonString)
-  //     classes.push(obj.name)
-  //     classMap.set(obj.name, obj.id)
-  //   }
-  // }
-
-  const [allClasses, setAllClasses] = useState<string[]>([])
-
-  // gets and sets the current user's classes when this component first renders
-  useEffect(() => {
-    props.user.getClasses().then((classes) => setAllClasses(classes))
-  }, [props.user])
-
-  //track currently selected class
-  const [currentClass, setClass] = useState(allClasses[0])
-
-  const handleClassSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setClass(e.target.value)
-    console.log(currentClass)
-  }
-
+  // dropdown for choosing which class is currently being studied for
   const classSelector = (
     <div className="flex flex-col mx-2">
       <p>Current Class</p>
