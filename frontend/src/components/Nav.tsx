@@ -17,9 +17,11 @@ export default function Nav() {
         </Link>
       </div>
       <div className="flex justify-center col-span-1">
-        <div className="bg-white rounded-full w-12 h-12">
-          <img src={clock} />
-        </div>
+        <Link to="/stopwatcher">
+          <div className="bg-white rounded-full w-12 h-12">
+            <img src={clock} />
+          </div>
+        </Link>
       </div>
       <div className="flex justify-end col-span-1">
         <Link to="/timer" className="btn-white">

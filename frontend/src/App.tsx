@@ -2,6 +2,7 @@ import { Navigate, Route, Routes } from 'react-router-dom'
 //import SignInScreen from './auth'
 import Nav from './components/Nav'
 import Home from './routes/Home'
+import Stopwatcher from './routes/Stopwatcher'
 import Timer from './routes/Timer'
 import Class from './routes/Class'
 import ClassRecords from './routes/ClassRecords'
@@ -32,6 +33,7 @@ export default function App() {
               path="class/:classId"
               element={<ClassRecords user={user} />}
             />
+            <Route path="stopwatcher" element={<Stopwatcher />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </main>
