@@ -33,18 +33,15 @@ export default function UserClasses() {
   )
 
   // loads and sets in the user's current classes to display
-  function loadUserClasses() {
-    const docs: QueryDocumentSnapshot<DocumentData>[] | undefined =
-      userClassesSnapshot?.docs
-    const tempClasses = []
-    if (docs !== undefined) {
-      for (let i = 0; i < docs?.length; i++) {
-        const jsonString: string = JSON.stringify(docs[i].data())
-        const obj = JSON.parse(jsonString)
-        tempClasses.push(obj.name)
-      }
+  const docs1: QueryDocumentSnapshot<DocumentData>[] | undefined =
+    userClassesSnapshot?.docs
+  const userClassNames = []
+  if (docs1 !== undefined) {
+    for (let i = 0; i < docs1?.length; i++) {
+      const jsonString: string = JSON.stringify(docs1[i].data())
+      const obj = JSON.parse(jsonString)
+      userClassNames.push(obj.name)
     }
-    setUserClasses(tempClasses)
   }
 
   // state variable for top three suggestions while searching
@@ -54,7 +51,7 @@ export default function UserClasses() {
   // based on levenstein distance
   function closestVals(userSearch: string) {
     const docs: QueryDocumentSnapshot<DocumentData>[] | undefined =
-      classValue?.docs  
+      classValue?.docs
     // loads in every class first
     const temp = new Map()
     if (docs !== undefined) {
@@ -66,14 +63,13 @@ export default function UserClasses() {
         temp.set(obj.name, ref)
       }
       setAllClasses(temp)
-      console.log(temp)
     }
 
     const distances = []
     const keys = Array.from(allClasses.keys())
     // for each class, the levenstein distance is computed and stored in a 2-D array to be sorted by distance
     for (let i = 0; i < keys.length; i++) {
-      const distance = leven(userSearch, keys[i])
+      const distance = leven(userSearch.toLowerCase(), keys[i].toLowerCase())
       distances.push([keys[i], distance])
     }
     distances.sort((first, second) => {
@@ -88,10 +84,8 @@ export default function UserClasses() {
   const [newClassDepartment, setNewClassDepartment] = useState('')
 
   // creates a new class in the collection of classes and sets its averages and total time to 0
-  async function addClass(event: FormEvent) {
-    event.preventDefault()
-
-    await addDoc(allClassesDB, {
+  function addClass() {
+    addDoc(allClassesDB, {
       daily_average: '0',
       department: newClassDepartment,
       name: newClassName,
@@ -114,46 +108,63 @@ export default function UserClasses() {
 
   return (
     <section className="bg-white rounded-lg p-4">
-      <button
-        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-        onClick={loadUserClasses}
-      >
-        Show Current Classes
-      </button>
-      <ul>
-        {userClasses.map((c: string) => (
-          <li>{c}</li>
-        ))}
-      </ul>
-
-      <input
-        placeholder="Search for an existing class"
-        onChange={(e) => closestVals(e.target.value)}
-      />
-      {suggestions.map((className: string) => (
+      <div className="grid grid-cols-3 gap-5">
         <div>
-          <button
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-            onClick={() => addClassToUser(className)} //
-          >
-            {className}
-          </button>
+          <h1 className="text-gray-900 text-xl leading-tight font-medium mb-2">
+            Current Classes
+          </h1>
+          <ul className="list-disc">
+            {userClassNames.map((name: string) => (
+              <li>{name}</li>
+            ))}
+          </ul>
         </div>
-      ))}
-      <br></br>
-      <form onSubmit={addClass}>
-        <input
-          value={newClassDepartment}
-          placeholder="Class department"
-          onChange={(e) => setNewClassDepartment(e.target.value)}
-        />
-        <input
-          value={newClassName}
-          placeholder="Class name"
-          onChange={(e) => setNewClassName(e.target.value)}
-        />
-        <button type="submit">Submit</button>
-      </form>
+
+        <div>
+          <h1 className="text-gray-900 text-xl leading-tight font-medium mb-2">
+            Add an existing class to your classes
+          </h1>
+          <input
+            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            placeholder="Search Here"
+            onChange={(e) => closestVals(e.target.value)}
+          />
+          {suggestions.map((className: string) => (
+            <div>
+              <button
+                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                onClick={() => addClassToUser(className)} //
+              >
+                {className}
+              </button>
+            </div>
+          ))}
+        </div>
+
+        <div>
+          <h1 className="text-gray-900 text-xl leading-tight font-medium mb-2">
+            Can't find one of your classes? Add it here
+          </h1>
+          <form>
+            <input
+              value={newClassDepartment}
+              placeholder="Class department"
+              onChange={(e) => setNewClassDepartment(e.target.value)}
+            />
+            <input
+              value={newClassName}
+              placeholder="Class name"
+              onChange={(e) => setNewClassName(e.target.value)}
+            />
+            <button
+              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+              onClick={addClass}
+            >
+              Submit
+            </button>
+          </form>
+        </div>
+      </div>
     </section>
   )
 }
