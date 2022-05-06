@@ -5,8 +5,7 @@ import { db } from '../firebase'
 import { collection, query, orderBy, addDoc, where } from 'firebase/firestore'
 import { doc } from "firebase/firestore";
 
-//enrolled classes must have a name field and an id field that matches their reference id
-
+//enrolled classes must have a name field and an id field that matches their reference id in the large class database
 
 interface TimerProp {
   totalDuration: number // in seconds, must be less than a day (86400 seconds).
