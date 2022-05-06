@@ -2,8 +2,8 @@ import { useState } from 'react'
 import Modal from 'react-modal'
 import { IoMdSettings } from 'react-icons/io'
 import { MdClose } from 'react-icons/md'
-import { User } from './Pomodoro'
 import TimeInput from './TimeInput'
+import User from '../../../models/User'
 
 // ensures background content is hidden for screen readers when settings is open
 Modal.setAppElement('#root')
@@ -23,9 +23,14 @@ const defaultNumPoms = 2 // after this many work sessions are completed, take lo
 // Allows the user to change the timer duration and other setting
 function Settings(props: SettingsProp) {
   const [isOpen, setIsOpen] = useState(false)
-  const [workTime, setWorkTime] = useState(props.user.pomWork)
-  const [shortBreakTime, setShortBreakTime] = useState(props.user.pomShortBreak)
-  const [longBreakTime, setLongBreakTime] = useState(props.user.pomLongBreak)
+  const pomSettings = props.user.pomTimerSettings
+  const [workTime, setWorkTime] = useState(pomSettings.workDuration)
+  const [shortBreakTime, setShortBreakTime] = useState(
+    pomSettings.shortBreakDuration
+  )
+  const [longBreakTime, setLongBreakTime] = useState(
+    pomSettings.longBreakDuration
+  )
 
   // close the settings modal
   function closeSettings() {
@@ -36,6 +41,8 @@ function Settings(props: SettingsProp) {
   function saveSettings() {
     console.log('Saving settings')
     // TODO push changes to firestore
+    const newPomSettings = {}
+
     if (workTime === undefined) {
       setWorkTime(defaultWork)
     }
@@ -45,12 +52,7 @@ function Settings(props: SettingsProp) {
     if (longBreakTime === undefined) {
       setLongBreakTime(defaultLongBreak)
     }
-    props.setUser({
-      ...props.user,
-      pomWork: workTime! * 60,
-      pomShortBreak: shortBreakTime! * 60,
-      pomLongBreak: longBreakTime! * 60,
-    })
+    props.user.saveNewSettings()
 
     closeSettings()
   }

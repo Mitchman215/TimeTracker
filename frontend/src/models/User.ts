@@ -49,6 +49,7 @@ export default class User {
       duration: timeStudied,
     })
   }
+  // test
 
   // returns the ids of all the classes a user is taking
   async getClasses(): Promise<string[]> {
@@ -58,6 +59,10 @@ export default class User {
     console.log({ classes })
     return classes
   }
+
+  async saveNewSettings() {
+    // todo: implement
+  }
 }
 
 export interface UserProp {
@@ -65,7 +70,7 @@ export interface UserProp {
 }
 
 // Firestore data converter for User
-export const userConverter = {
+const userConverter = {
   toFirestore(user: User): DocumentData {
     return {
       email: user.email,
@@ -88,6 +93,7 @@ export const userConverter = {
   },
 }
 
+// returns a User object that repersents the currently logged in user
 export async function getCurrentUser() {
   // current user id, to be replaced
   const userId = 'QpDjNV8TwCqg1hWNNtE5'
