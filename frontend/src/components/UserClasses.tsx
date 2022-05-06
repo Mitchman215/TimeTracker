@@ -16,7 +16,6 @@ import leven from 'leven'
 
 export default function UserClasses() {
   // a given user's data for their classes
-  const [userClasses, setUserClasses]: any[] = useState([])
   const userClassesDB = collection(
     db,
     'users',
@@ -35,7 +34,7 @@ export default function UserClasses() {
   // loads and sets in the user's current classes to display
   const docs1: QueryDocumentSnapshot<DocumentData>[] | undefined =
     userClassesSnapshot?.docs
-  const userClassNames = []
+  const userClassNames: string[] = []
   if (docs1 !== undefined) {
     for (let i = 0; i < docs1?.length; i++) {
       const jsonString: string = JSON.stringify(docs1[i].data())
@@ -47,26 +46,24 @@ export default function UserClasses() {
   // state variable for top three suggestions while searching
   const [suggestions, setSuggestions]: any[] = useState([])
 
+  // loads in every class into a hashmap with the key being the name and the value being the firebase reference
+  const classDocs: QueryDocumentSnapshot<DocumentData>[] | undefined =
+    classValue?.docs
+  const allClassesMap = new Map()
+  if (classDocs !== undefined) {
+    for (let i = 0; i < classDocs?.length; i++) {
+      const jsonString: string = JSON.stringify(classDocs[i].data())
+      const ref = classDocs[i].ref
+      const obj = JSON.parse(jsonString)
+      allClassesMap.set(obj.name, ref)
+    }
+  }
+
   // takes in a string from the user input in the search bar, and returns the top three most similar class names
   // based on levenstein distance
   function closestVals(userSearch: string) {
-    const docs: QueryDocumentSnapshot<DocumentData>[] | undefined =
-      classValue?.docs
-    // loads in every class first
-    const temp = new Map()
-    if (docs !== undefined) {
-      setAllClasses(new Map())
-      for (let i = 0; i < docs?.length; i++) {
-        const jsonString: string = JSON.stringify(docs[i].data())
-        const ref = docs[i].ref
-        const obj = JSON.parse(jsonString)
-        temp.set(obj.name, ref)
-      }
-      setAllClasses(temp)
-    }
-
     const distances = []
-    const keys = Array.from(allClasses.keys())
+    const keys = Array.from(allClassesMap.keys())
     // for each class, the levenstein distance is computed and stored in a 2-D array to be sorted by distance
     for (let i = 0; i < keys.length; i++) {
       const distance = leven(userSearch.toLowerCase(), keys[i].toLowerCase())
@@ -84,26 +81,35 @@ export default function UserClasses() {
   const [newClassDepartment, setNewClassDepartment] = useState('')
 
   // creates a new class in the collection of classes and sets its averages and total time to 0
-  function addClass() {
-    addDoc(allClassesDB, {
-      daily_average: '0',
-      department: newClassDepartment,
-      name: newClassName,
-      total_time: '0',
-      weekly_average: '0',
-    })
+  async function addClass(event: FormEvent) {
+    event.preventDefault()
+    if (allClassesMap.has(newClassName)) {
+      console.log('User tried to add a class that already exists')
+    } else {
+      await addDoc(allClassesDB, {
+        daily_average: '0',
+        department: newClassDepartment,
+        name: newClassName,
+        total_time: '0',
+        weekly_average: '0',
+      })
+    }
   }
 
   // takes in an existing class name selected by the user, and adds the corresponding class to the user's list of current classes
   function addClassToUser(className: string) {
-    setDoc(doc(userClassesDB, className), {
-      class: allClasses.get(className),
-      daily_averages: [],
-      id: allClasses.get(className).id,
-      monthly_averages: [],
-      name: className,
-      weekly_averages: [],
-    })
+    if (userClassNames.includes(className)) {
+      console.log('User tried to add a class they already have.')
+    } else {
+      setDoc(doc(userClassesDB, className), {
+        class: allClassesMap.get(className),
+        daily_averages: [],
+        id: allClassesMap.get(className).id,
+        monthly_averages: [],
+        name: className,
+        weekly_averages: [],
+      })
+    }
   }
 
   return (
@@ -133,7 +139,7 @@ export default function UserClasses() {
             <div>
               <button
                 className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                onClick={() => addClassToUser(className)} //
+                onClick={() => addClassToUser(className)}
               >
                 {className}
               </button>
