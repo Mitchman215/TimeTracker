@@ -1,9 +1,9 @@
-import Pomodoro from '../components/pomodoro/Pomodoro'
+import TimeTracker from '../components/TimeTracker'
 
 export default function Timer() {
   return (
     <main>
-      <Pomodoro user={{}} />
+      <TimeTracker />
     </main>
   )
 }
