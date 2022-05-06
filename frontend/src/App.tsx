@@ -10,9 +10,10 @@ import NotFound from './routes/NotFound'
 import { useAuthState } from 'react-firebase-hooks/auth'
 import { auth } from './firebase'
 import Auth from './routes/Auth'
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import Classes from './components/Classes'
 import User, { getOrCreateUser } from './models/User'
+import UserContext from './models/UserContext'
 
 // some logic here to make sure Nav doesn't render unless logged in.
 export default function App() {
@@ -31,7 +32,6 @@ export default function App() {
   }, [authUser])
 
   if (user && user.email?.endsWith('@brown.edu')) {
-    const UserContext = React.createContext(user)
     return (
       <UserContext.Provider value={user}>
         <div className="bg-blue-light w-screen h-screen p-4">
@@ -40,15 +40,12 @@ export default function App() {
           </header>
           <main className="mt-8">
             <Routes>
-              <Route path="/" element={<Home user={user} />} />
+              <Route path="/" element={<Home />} />
               <Route path="timetracker" element={<Timetrack />} />
               <Route path="auth" element={<Navigate replace to="/" />} />
               <Route path="class" element={<Class />} />
               <Route path="data" element={<Classes />} />
-              <Route
-                path="class/:classId"
-                element={<ClassRecords user={user} />}
-              />
+              <Route path="class/:classId" element={<ClassRecords />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </main>

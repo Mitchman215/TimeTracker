@@ -11,15 +11,16 @@ import {
   setDoc,
 } from 'firebase/firestore'
 import { useCollection } from 'react-firebase-hooks/firestore'
-import { FormEvent, useState } from 'react'
+import { FormEvent, useContext, useState } from 'react'
 import leven from 'leven'
 import User from '../models/User'
+import UserContext from '../models/UserContext'
 
-type UserClassesProps = {
-  user: User
-}
-
-export default function UserClasses({ user }: UserClassesProps) {
+export default function UserClasses() {
+  const user = useContext(UserContext)
+  if (user === null) {
+    throw new Error('No user logged in')
+  }
   // a given user's data for their classes
   const userClassesDB = collection(db, 'users', user.uid, 'classes')
   const [userClassesSnapshot, loading, error] = useCollection(userClassesDB)

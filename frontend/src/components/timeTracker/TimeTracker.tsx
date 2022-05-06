@@ -3,14 +3,6 @@ import { UserProp } from '../../models/User'
 import Pomodoro from './pomodoro/Pomodoro'
 import StopWatch from './StopWatch'
 
-// props that will be passed to the different modes of time tracking
-interface TrackerProp {
-  // should be called whenever the time tracker starts
-  setStartTime: (startTime: Date | undefined) => void
-  // should be updated every time the time tracker increments
-  setTimeStudied: (timeStudied: number) => void
-}
-
 // Component for tracking time, either via the stopwatch or pomodoro timer
 function TimeTracker(props: UserProp) {
   // state that controls which classes the user can study for
