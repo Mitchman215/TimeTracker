@@ -1,10 +1,15 @@
+import { User } from 'firebase/auth'
 import Classes from '../components/Classes'
 import UserClasses from '../components/UserClasses'
 
-export default function Home() {
+type HomeProps = {
+  user: User
+}
+
+export default function Home({ user }: HomeProps) {
   return (
     <>
-      <UserClasses />
+      <UserClasses user={user} />
     </>
   )
 }

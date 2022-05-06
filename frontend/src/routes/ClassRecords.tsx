@@ -15,7 +15,7 @@ type ClassProps = {
   user: User
 }
 
-export default function Class({ user }: ClassProps) {
+export default function ClassRecords({ user }: ClassProps) {
   const { classId } = useParams() as ClassURLParams
 
   const classDoc = doc(db, 'classes', classId)

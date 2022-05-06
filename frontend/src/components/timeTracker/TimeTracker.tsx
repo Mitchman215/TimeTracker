@@ -66,7 +66,7 @@ function TimeTracker(props: UserProp) {
       selectedTracker = <Pomodoro user={{}} />
       break
     case Mode.Stopwatch:
-      selectedTracker = <StopWatch />
+      selectedTracker = <StopWatch user={{}} />
       break
   }
 

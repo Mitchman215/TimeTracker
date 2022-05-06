@@ -13,15 +13,15 @@ import {
 import { useCollection } from 'react-firebase-hooks/firestore'
 import { FormEvent, useState } from 'react'
 import leven from 'leven'
+import { User } from 'firebase/auth'
 
-export default function UserClasses() {
+type UserClassesProps = {
+  user: User
+}
+
+export default function UserClasses({ user }: UserClassesProps) {
   // a given user's data for their classes
-  const userClassesDB = collection(
-    db,
-    'users',
-    'QpDjNV8TwCqg1hWNNtE5',
-    'classes'
-  )
+  const userClassesDB = collection(db, 'users', user.uid, 'classes')
   const [userClassesSnapshot, loading, error] = useCollection(userClassesDB)
 
   // all aggregated class data
@@ -121,7 +121,7 @@ export default function UserClasses() {
           </h1>
           <ul className="list-disc">
             {userClassNames.map((name: string) => (
-              <li>{name}</li>
+              <li key={name}>{name}</li>
             ))}
           </ul>
         </div>
@@ -136,7 +136,7 @@ export default function UserClasses() {
             onChange={(e) => closestVals(e.target.value)}
           />
           {suggestions.map((className: string) => (
-            <div>
+            <div key={className}>
               <button
                 className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
                 onClick={() => addClassToUser(className)}
