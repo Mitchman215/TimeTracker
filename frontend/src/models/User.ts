@@ -49,6 +49,7 @@ export default class User {
       duration: timeStudied,
     })
   }
+  // test
 
   // returns the ids of all the classes a user is taking
   async getClasses(): Promise<string[]> {
