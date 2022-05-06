@@ -1,7 +1,14 @@
+import { render } from '@testing-library/react'
 import { Link } from 'react-router-dom'
+import { auth } from '../firebase'
 import clock from '../images/clock.png'
 
 export default function Nav() {
+  function logout() {
+    auth.signOut()
+    localStorage.clear()
+    window.location.href = '/'
+  }
   return (
     <nav className="grid grid-cols-3 grid-rows-1 items-center">
       <div className="flex justify-start col-span-1">
@@ -18,6 +25,13 @@ export default function Nav() {
         <Link to="/timer" className="btn-white">
           Timer
         </Link>
+      </div>
+      <div className="flex justify-end col-span-3">
+        <div>
+          <button onClick={logout} className="btn-white">
+            Logout
+          </button>
+        </div>
       </div>
     </nav>
   )
