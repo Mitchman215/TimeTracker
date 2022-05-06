@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useTimer } from 'react-timer-hook'
-import usePrompt from '../../hooks/usePrompt'
+import usePrompt from '../../../hooks/usePrompt'
 import Settings from './Settings'
 import TimerDisplay, { TimerState } from './TimerDisplay'
 

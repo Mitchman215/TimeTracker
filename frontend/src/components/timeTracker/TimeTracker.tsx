@@ -1,7 +1,8 @@
 import { addDoc, collection, doc, query } from 'firebase/firestore'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useCollection } from 'react-firebase-hooks/firestore'
-import { db } from '../firebase'
+import { db } from '../../firebase'
+import { getCurrentUser, UserProp } from '../../models/User'
 import Pomodoro from './pomodoro/Pomodoro'
 import StopWatch from './StopWatch'
 
@@ -14,7 +15,7 @@ interface TrackerProp {
 }
 
 // Component for tracking time, either via the stopwatch or pomodoro timer
-function TimeTracker() {
+function TimeTracker(props: UserProp) {
   // the available time tracking modes
   enum Mode {
     PomTimer = 'Pomodoro Timer',
@@ -25,7 +26,11 @@ function TimeTracker() {
 
   // returns an individual dropdown option for some value with a toString method
   function optionFor(val: { toString: () => string }) {
-    return <option value={val.toString()}>{val.toString()}</option>
+    return (
+      <option value={val.toString()} key={val.toString()}>
+        {val.toString()}
+      </option>
+    )
   }
 
   // handles selecting a tracking mode from the dropdown
@@ -65,32 +70,39 @@ function TimeTracker() {
       break
   }
 
-  // maybe change around following lines so user data is passed in as opposed to queried numerous times
-  //user id (will be changed the the current logged in user once integrated)
-  const userId = 'QpDjNV8TwCqg1hWNNtE5'
-  // get a reference to the users' existing time records
-  const recordsRef = collection(db, 'users', userId, 'records')
+  // // maybe change around following lines so user data is passed in as opposed to queried numerous times
+  // //user id (will be changed the the current logged in user once integrated)
+  // const userId = 'QpDjNV8TwCqg1hWNNtE5'
+  // // get a reference to the users' existing time records
+  // const recordsRef = collection(db, 'users', userId, 'records')
 
-  //get names of all enrolled classes
-  const userClassesRef = collection(db, 'users', userId, 'classes')
-  const [value, loading, error] = useCollection(query(userClassesRef))
+  // //get names of all enrolled classes
+  // const userClassesRef = collection(db, 'users', userId, 'classes')
+  // const [value, loading, error] = useCollection(query(userClassesRef))
 
-  const docs = value?.docs
-  const classes: string[] = []
-  const classMap = new Map()
-  if (docs !== undefined) {
-    for (let i = 0; i < docs?.length; i++) {
-      const jsonString: string = JSON.stringify(docs[i].data())
-      const obj = JSON.parse(jsonString)
-      classes.push(obj.name)
-      classMap.set(obj.name, obj.id)
-    }
-  }
+  // const docs = value?.docs
+  // const classes: string[] = []
+  // const classMap = new Map()
+  // if (docs !== undefined) {
+  //   for (let i = 0; i < docs?.length; i++) {
+  //     const jsonString: string = JSON.stringify(docs[i].data())
+  //     const obj = JSON.parse(jsonString)
+  //     classes.push(obj.name)
+  //     classMap.set(obj.name, obj.id)
+  //   }
+  // }
+
+  const [allClasses, setAllClasses] = useState<string[]>([])
+
+  // gets and sets the current user's classes when this component first renders
+  useEffect(() => {
+    props.user.getClasses().then((classes) => setAllClasses(classes))
+  }, [props.user])
 
   //track currently selected class
-  const [currentClass, setClass] = useState(classes[0])
+  const [currentClass, setClass] = useState(allClasses[0])
 
-  const handleSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
+  const handleClassSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setClass(e.target.value)
     console.log(currentClass)
   }
@@ -98,37 +110,23 @@ function TimeTracker() {
   const classSelector = (
     <div className="flex flex-col mx-2">
       <p>Current Class</p>
-      <select onChange={handleSelect}>
-        {classes.map((c) => (
-          <option value={c}>{c}</option>
+      <select onChange={handleClassSelect}>
+        {allClasses.map((c) => (
+          <option value={c} key={c}>
+            {c}
+          </option>
         ))}
       </select>
     </div>
   )
 
-  // save a record of study session to the firestore db
-  async function addRecord() {
-    let theClass: string
-    const finishTime = new Date()
-    if (currentClass === undefined) {
-      theClass = classes[0]
-    } else {
-      theClass = currentClass
-    }
-    const ref: string = classMap.get(theClass)
-    console.log({ class: theClass, ref: ref })
-    await addDoc(recordsRef, {
-      class: doc(db, 'classes', ref),
-      class_name: theClass,
-      start: startTime,
-      finish: finishTime,
-      duration: timeStudied,
-    })
-  }
-
   //when log study time is pressed
   function logRecord() {
-    addRecord()
+    if (startTime !== undefined) {
+      props.user.logRecord(currentClass, startTime, timeStudied)
+    } else {
+      console.log("Study session has not started, can't log it")
+    }
     // reset(undefined, false)
     // setStarted(false)
   }

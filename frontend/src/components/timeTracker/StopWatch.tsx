@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useStopwatch } from 'react-timer-hook'
 import { useCollection } from 'react-firebase-hooks/firestore'
-import { db } from '../firebase'
+import { db } from '../../firebase'
 import { collection, query, addDoc } from 'firebase/firestore'
 import { doc } from 'firebase/firestore'
 import { formatTime } from './pomodoro/TimerDisplay'
