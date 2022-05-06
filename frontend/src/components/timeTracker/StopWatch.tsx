@@ -5,21 +5,17 @@ import { db } from '../../firebase'
 import { collection, query, addDoc } from 'firebase/firestore'
 import { doc } from 'firebase/firestore'
 import { formatTime } from './pomodoro/TimerDisplay'
-import { User } from 'firebase/auth'
+import { UserProp } from '../../models/User'
 
 //enrolled classes must have a name field and an id field that matches their reference id
 
-type StopWatchProps = {
-  user: User
-}
-
-function StopWatch({ user }: StopWatchProps) {
+function StopWatch(props: UserProp) {
   //Stopwatch object
   const { seconds, minutes, hours, isRunning, start, pause, reset } =
     useStopwatch({ autoStart: false })
 
   //user id (will be changed the the current logged in user once integrated)
-  const userId = user.uid
+  const userId = props.user.id
 
   //track start time
   const [startTime, setStart] = useState(new Date())

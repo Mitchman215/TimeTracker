@@ -3,7 +3,7 @@ import TimeTracker from '../components/timeTracker/TimeTracker'
 import User, { getCurrentUser } from '../models/User'
 
 // TODO: fix to better handle user (environment variable at top level?)
-export default function Timer() {
+export default function Timetrack() {
   // temporary fix
   const [user, setUser] = useState<User>()
   useEffect(() => {

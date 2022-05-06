@@ -86,7 +86,7 @@ function TimeTracker(props: UserProp) {
       )
       break
     case Mode.Stopwatch:
-      selectedTracker = <StopWatch user={{}} />
+      selectedTracker = <StopWatch user={props.user} />
       break
   }
 

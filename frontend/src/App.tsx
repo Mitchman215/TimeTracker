@@ -2,8 +2,7 @@ import { Navigate, Route, Routes } from 'react-router-dom'
 //import SignInScreen from './auth'
 import Nav from './components/Nav'
 import Home from './routes/Home'
-import Stopwatcher from './routes/Stopwatcher'
-import Timer from './routes/Timer'
+import Timetrack from './routes/Timetrack'
 import Class from './routes/Class'
 import ClassRecords from './routes/ClassRecords'
 import NotFound from './routes/NotFound'
@@ -30,7 +29,7 @@ export default function App() {
           <main className="mt-8">
             <Routes>
               <Route path="/" element={<Home user={user} />} />
-              <Route path="timer" element={<Timer />} />
+              <Route path="timetracker" element={<Timetrack />} />
               <Route path="auth" element={<Navigate replace to="/" />} />
               <Route path="class" element={<Class />} />
               <Route path="data" element={<Classes />} />
@@ -38,7 +37,6 @@ export default function App() {
                 path="class/:classId"
                 element={<ClassRecords user={user} />}
               />
-              <Route path="stopwatcher" element={<Stopwatcher user={user} />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </main>
