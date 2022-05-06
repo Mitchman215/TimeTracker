@@ -10,9 +10,11 @@ import {
   DocumentSnapshot,
   query,
   collection,
+  setDoc,
 } from 'firebase/firestore'
 import { db } from '../firebase'
 import { defaultPomSettings, PomTimerSettings } from './PomTimerSettings'
+import { User as AuthUser } from 'firebase/auth'
 
 // Represents a user's data. Mirrors user data in firestore
 export default class User {
@@ -21,12 +23,12 @@ export default class User {
   readonly classesRef: CollectionReference<DocumentData>
 
   constructor(
-    readonly id: string,
-    readonly email: string,
+    readonly uid: string,
+    readonly email: string | null,
     readonly pomTimerSettings: PomTimerSettings = defaultPomSettings
   ) {
-    this.recordsRef = collection(db, 'users', this.id, 'records')
-    this.classesRef = collection(db, 'users', this.id, 'classes')
+    this.recordsRef = collection(db, 'users', this.uid, 'records')
+    this.classesRef = collection(db, 'users', this.uid, 'classes')
   }
 
   toString(): string {
@@ -74,8 +76,6 @@ const userConverter = {
   toFirestore(user: User): DocumentData {
     return {
       email: user.email,
-      records: user.recordsRef,
-      classes: user.classesRef,
       pom_timer_settings: {
         work_duration: user.pomTimerSettings.workDuration,
         short_break_duration: user.pomTimerSettings.shortBreakDuration,
@@ -102,6 +102,22 @@ export async function getCurrentUser() {
   if (userSnap.exists()) {
     return userSnap.data()
   } else {
-    throw new Error(`No user with id "${userId}" exists in the database`)
+    throw new Error(`No user with uid "${userId}" exists in the database`)
+  }
+}
+
+export async function getOrCreateUser(authUser: AuthUser) {
+  const userRef = doc(db, 'users', authUser.uid).withConverter(userConverter)
+  const userSnap: DocumentSnapshot<User> = await getDoc(userRef)
+  if (userSnap.exists()) {
+    return userSnap.data()
+  } else {
+    // user doc does not exist in users collection, so create it
+    console.log(`creating user doc for ${authUser.uid}`)
+    await setDoc(doc(db, 'users', authUser.uid), {
+      email: authUser.email,
+      pom_timer_settings: defaultPomSettings,
+    })
+    return new User(authUser.uid, authUser.email, defaultPomSettings)
   }
 }

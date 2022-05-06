@@ -13,7 +13,7 @@ import {
 import { useCollection } from 'react-firebase-hooks/firestore'
 import { FormEvent, useState } from 'react'
 import leven from 'leven'
-import { User } from 'firebase/auth'
+import User from '../models/User'
 
 type UserClassesProps = {
   user: User

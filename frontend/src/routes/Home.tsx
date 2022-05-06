@@ -1,6 +1,5 @@
-import { User } from 'firebase/auth'
-import Classes from '../components/Classes'
 import UserClasses from '../components/UserClasses'
+import User from '../models/User'
 
 type HomeProps = {
   user: User

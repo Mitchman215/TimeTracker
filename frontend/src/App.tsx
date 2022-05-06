@@ -10,16 +10,28 @@ import NotFound from './routes/NotFound'
 import { useAuthState } from 'react-firebase-hooks/auth'
 import { auth } from './firebase'
 import Auth from './routes/Auth'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Classes from './components/Classes'
+import User, { getOrCreateUser } from './models/User'
 
 // some logic here to make sure Nav doesn't render unless logged in.
 export default function App() {
-  const [user, loading, error] = useAuthState(auth)
-
-  const UserContext = React.createContext({})
+  const [authUser, loading, error] = useAuthState(auth)
+  // when the logged in user changes, retrieve user doc and set it
+  const [user, setUser] = useState<User>()
+  useEffect(() => {
+    console.log({ authUser })
+    if (authUser) {
+      // user is successfully logged in
+      getOrCreateUser(authUser).then(setUser)
+    } else {
+      // no user logged in
+      setUser(undefined)
+    }
+  }, [authUser])
 
   if (user && user.email?.endsWith('@brown.edu')) {
+    const UserContext = React.createContext(user)
     return (
       <UserContext.Provider value={user}>
         <div className="bg-blue-light w-screen h-screen p-4">
@@ -43,7 +55,7 @@ export default function App() {
         </div>
       </UserContext.Provider>
     )
-  } else if (user) {
+  } else if (authUser) {
     return (
       <div className="bg-blue-light w-screen h-screen p-4">
         <header>

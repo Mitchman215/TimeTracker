@@ -15,7 +15,7 @@ function StopWatch(props: UserProp) {
     useStopwatch({ autoStart: false })
 
   //user id (will be changed the the current logged in user once integrated)
-  const userId = props.user.id
+  const userId = props.user.uid
 
   //track start time
   const [startTime, setStart] = useState(new Date())
@@ -128,7 +128,9 @@ function StopWatch(props: UserProp) {
       <p>Current Class:</p>
       <select onChange={(e) => handleSelect(e.target.value)}>
         {classes.map((c) => (
-          <option value={c}>{c}</option>
+          <option value={c} key={c}>
+            {c}
+          </option>
         ))}
       </select>
     </div>

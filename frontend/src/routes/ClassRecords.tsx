@@ -5,7 +5,7 @@ import { doc } from 'firebase/firestore'
 import { db } from '../firebase'
 import { useDocumentDataOnce } from 'react-firebase-hooks/firestore'
 import Card from '../components/Card'
-import { User } from 'firebase/auth'
+import User from '../models/User'
 
 type ClassURLParams = {
   classId: string
