@@ -1,17 +1,23 @@
-import { useEffect, useState } from 'react'
-import { UserProp } from '../../models/User'
+import { useContext, useEffect, useState } from 'react'
+import UserContext from '../../models/UserContext'
 import Pomodoro from './pomodoro/Pomodoro'
 import StopWatch from './StopWatch'
 
 // Component for tracking time, either via the stopwatch or pomodoro timer
-function TimeTracker(props: UserProp) {
+function TimeTracker() {
+  // get the user from the context
+  const user = useContext(UserContext)
+  if (user === null) {
+    throw new Error('No user logged in')
+  }
+
   // state that controls which classes the user can study for
   const [allClasses, setAllClasses] = useState<string[]>([])
 
   // gets and sets the current user's classes when this component first renders
   useEffect(() => {
-    props.user.getClasses().then((classes) => setAllClasses(classes))
-  }, [props.user])
+    user.getClasses().then((classes) => setAllClasses(classes))
+  }, [user])
 
   // track currently selected class
   const [currentClass, setClass] = useState(allClasses[0])
@@ -59,26 +65,20 @@ function TimeTracker(props: UserProp) {
     </select>
   )
 
-  // when the user started studying. Is undefined if user hasn't started
-  const [startTime, setStartTime] = useState<Date>()
-
-  // how long the user has been studying for in seconds
-  const [timeStudied, setTimeStudied] = useState(0)
-
   // the current mode's time tracking component ui
   let selectedTracker: JSX.Element
   switch (curMode) {
     case Mode.PomTimer:
       selectedTracker = (
         <Pomodoro
-          user={props.user}
+          user={user}
           currentClass={currentClass}
           currentAssignment={''}
         />
       )
       break
     case Mode.Stopwatch:
-      selectedTracker = <StopWatch user={props.user} />
+      selectedTracker = <StopWatch user={user} />
       break
   }
 
@@ -96,17 +96,6 @@ function TimeTracker(props: UserProp) {
     </div>
   )
 
-  //when log study time is pressed
-  function logRecord() {
-    if (startTime !== undefined) {
-      props.user.logRecord(currentClass, startTime, timeStudied)
-    } else {
-      console.log("Study session has not started, can't log it")
-    }
-    // reset(undefined, false)
-    // setStarted(false)
-  }
-
   return (
     <div className="flex flex-col justify-center items-center bg-orange-light p-4">
       <span className="bg-blue-medium flex justify-center items-center p-1 rounded-sm">
@@ -121,9 +110,6 @@ function TimeTracker(props: UserProp) {
           name="assignment"
           placeholder="Enter Assignment name here"
         />
-        <button className="btn-purple" onClick={logRecord}>
-          Log Study Time
-        </button>
       </div>
     </div>
   )

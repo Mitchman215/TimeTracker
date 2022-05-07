@@ -124,15 +124,6 @@ function StopWatch(props: UserProp) {
       <span className="btn-purple">
         {<button onClick={handleReset}>Reset</button>}
       </span>
-      &nbsp;
-      <p>Current Class:</p>
-      <select onChange={(e) => handleSelect(e.target.value)}>
-        {classes.map((c) => (
-          <option value={c} key={c}>
-            {c}
-          </option>
-        ))}
-      </select>
     </div>
   )
 }

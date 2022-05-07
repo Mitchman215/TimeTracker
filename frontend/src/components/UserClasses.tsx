@@ -13,16 +13,16 @@ import {
 import { useCollection } from 'react-firebase-hooks/firestore'
 import { FormEvent, useContext, useState } from 'react'
 import leven from 'leven'
-import User from '../models/User'
 import UserContext from '../models/UserContext'
 
 export default function UserClasses() {
+  // get the user from the context
   const user = useContext(UserContext)
   if (user === null) {
     throw new Error('No user logged in')
   }
   // a given user's data for their classes
-  const userClassesDB = collection(db, 'users', user.uid, 'classes')
+  const userClassesDB = user.classesRef
   const [userClassesSnapshot, loading, error] = useCollection(userClassesDB)
 
   // all aggregated class data

@@ -51,7 +51,6 @@ export default class User {
       duration: timeStudied,
     })
   }
-  // test
 
   // returns the ids of all the classes a user is taking
   async getClasses(): Promise<string[]> {
@@ -60,6 +59,10 @@ export default class User {
     const classes = docs.docs.map((s) => s.id)
     console.log({ classes })
     return classes
+  }
+
+  async enrollInExistingClass() {
+    // todo: implement maybe
   }
 
   async saveNewSettings() {
