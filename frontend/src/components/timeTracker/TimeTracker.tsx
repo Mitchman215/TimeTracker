@@ -28,7 +28,7 @@ function TimeTracker() {
   // to be called when classSelector dropdown changes
   const handleClassSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setClass(e.target.value)
-    console.log(curClass)
+    console.log(`changing class to ${e.target.value}`)
   }
 
   // the available time tracking modes

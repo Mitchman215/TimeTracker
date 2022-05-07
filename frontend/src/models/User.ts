@@ -13,7 +13,7 @@ import {
   getDoc,
 } from 'firebase/firestore'
 import { db } from '../firebase'
-import { defaultPomSettings, PomTimerSettings } from './PomTimerSettings'
+import { defaultPomSettings, PomSettings } from './PomSettings'
 import { User as AuthUser } from 'firebase/auth'
 
 // Represents a user's data. Mirrors user data in firestore
@@ -25,7 +25,7 @@ export default class User {
   constructor(
     readonly uid: string,
     readonly email: string | null,
-    readonly pomTimerSettings: PomTimerSettings = defaultPomSettings
+    readonly pomSettings: PomSettings = defaultPomSettings
   ) {
     this.recordsRef = collection(db, 'users', this.uid, 'records')
     this.classesRef = collection(db, 'users', this.uid, 'classes')
@@ -66,9 +66,9 @@ export default class User {
   }
 
   // saves new settings to firestore
-  async saveNewSettings(newSettings: PomTimerSettings) {
+  async saveNewSettings(newSettings: PomSettings) {
     updateDoc(doc(db, 'users', this.uid), {
-      pom_timer_settings: newSettings,
+      pom_settings: newSettings,
     })
   }
 }
@@ -80,13 +80,19 @@ export interface UserProp {
 // Firestore data converter for User
 const userConverter = {
   toFirestore(user: User): DocumentData {
+    const {
+      workDuration: work,
+      shortBreakDuration: sBreak,
+      longBreakDuration: lBreak,
+      pomsPerSet: numPoms,
+    } = user.pomSettings
     return {
       email: user.email,
-      pom_timer_settings: {
-        work_duration: user.pomTimerSettings.workDuration,
-        short_break_duration: user.pomTimerSettings.shortBreakDuration,
-        long_break_duration: user.pomTimerSettings.longBreakDuration,
-        poms_per_set: user.pomTimerSettings.pomsPerSet,
+      pom_settings: {
+        work_duration: work,
+        short_break_duration: sBreak,
+        long_break_duration: lBreak,
+        poms_per_set: numPoms,
       },
     }
   },
@@ -95,7 +101,7 @@ const userConverter = {
     options: SnapshotOptions
   ): User {
     const data = snapshot.data(options)
-    return new User(snapshot.id, data.email, data.pom_timer_settings)
+    return new User(snapshot.id, data.email, data.pom_settings)
   },
 }
 
@@ -117,7 +123,7 @@ export async function createInitialUserDoc(authUser: AuthUser) {
     console.log(`creating user doc for ${authUser.uid}`)
     await setDoc(doc(db, 'users', authUser.uid), {
       email: authUser.email,
-      pom_timer_settings: defaultPomSettings,
+      pom_settings: defaultPomSettings,
     })
   } else {
     console.log(`user doc for ${authUser.uid} exists already`)

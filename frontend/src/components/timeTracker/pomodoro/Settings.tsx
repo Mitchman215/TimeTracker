@@ -4,10 +4,7 @@ import { IoMdSettings } from 'react-icons/io'
 import { MdClose } from 'react-icons/md'
 import TimeInput from './TimeInput'
 import User from '../../../models/User'
-import {
-  defaultPomSettings,
-  PomTimerSettings,
-} from '../../../models/PomTimerSettings'
+import { defaultPomSettings, PomSettings } from '../../../models/PomSettings'
 
 // ensures background content is hidden for screen readers when settings is open
 Modal.setAppElement('#root')
@@ -22,7 +19,7 @@ function Settings(props: SettingsProp) {
   // whether the settings modal is open
   const [isOpen, setIsOpen] = useState(false)
   const { workDuration, shortBreakDuration, longBreakDuration, pomsPerSet } =
-    props.user.pomTimerSettings
+    props.user.pomSettings
   const [workTime, setWorkTime] = useState(workDuration)
   const [shortBreakTime, setShortBreakTime] = useState(shortBreakDuration)
   const [longBreakTime, setLongBreakTime] = useState(longBreakDuration)
@@ -48,7 +45,7 @@ function Settings(props: SettingsProp) {
       setLongBreakTime(defaultPomSettings.longBreakDuration)
     }
 
-    const newPomSettings: PomTimerSettings = {
+    const newPomSettings: PomSettings = {
       workDuration: workTime,
       shortBreakDuration: shortBreakTime,
       longBreakDuration: longBreakTime,

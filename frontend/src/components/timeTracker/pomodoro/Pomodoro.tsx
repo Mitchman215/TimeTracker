@@ -34,7 +34,7 @@ function Pomodoro(props: PomodoroProp) {
     case Stage.NotStarted:
     case Stage.Work:
       titleString = 'Time to grind'
-      duration = props.user.pomTimerSettings.workDuration
+      duration = props.user.pomSettings.workDuration
       // when work timer finishes, incremenent the pom # and advance to either short break or long break
       onTimerFinish = () => {
         console.log('Finished work session!')
@@ -63,7 +63,7 @@ function Pomodoro(props: PomodoroProp) {
       break
     case Stage.ShortBreak:
       titleString = 'Nice! Time for a short break'
-      duration = props.user.pomTimerSettings.shortBreakDuration
+      duration = props.user.pomSettings.shortBreakDuration
       // when short break timer finishes, advance to work stage
       onTimerFinish = () => {
         console.log('Short break done!')
@@ -72,7 +72,7 @@ function Pomodoro(props: PomodoroProp) {
       break
     case Stage.LongBreak:
       titleString = 'Good job! Time for a long break'
-      duration = props.user.pomTimerSettings.longBreakDuration
+      duration = props.user.pomSettings.longBreakDuration
       // when long break timer finishes, reset to not started stage
       onTimerFinish = () => {
         console.log('Long break done!')
