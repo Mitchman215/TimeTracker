@@ -20,16 +20,12 @@ enum Stage {
 }
 
 // default pomodoro workflow settings (change to match comments before final submission)
-const defaultWork = 0.25 * 60 // 25 minutes
-const defaultShortBreak = 0.1 * 60 // 5 minutes
-const defaultLongBreak = 0.5 * 60 // 15 minutes
 const defaultNumPoms = 2 // after this many work sessions are completed, take long break
 
 function Pomodoro(props: PomodoroProp) {
   const [curStage, setStage] = useState<Stage>(Stage.NotStarted)
   const [startTime, setStartTime] = useState<Date>()
   const [pomsFinished, setPomsFinished] = useState(0)
-  const [user, setUser] = useState<User>(props.user)
 
   let duration: number
   let titleString: string
@@ -103,7 +99,7 @@ function Pomodoro(props: PomodoroProp) {
   useEffect(() => {
     timerHook.restart(getExpireTime(), curStage !== Stage.NotStarted)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [curStage, user])
+  }, [curStage, props.user])
 
   function getTimerState(): TimerState {
     if (curStage === Stage.NotStarted) {
@@ -145,9 +141,7 @@ function Pomodoro(props: PomodoroProp) {
       <span className="flex flex-row items-center bg-orange-light text-white font-semibold">
         <h2 className="px-2 text-2xl">{titleString}</h2>
         <h3 className="px-2 text-xl">#Poms: {pomsFinished}</h3>
-        {curStage === Stage.NotStarted && (
-          <Settings user={props.user} setUser={setUser} />
-        )}
+        {curStage === Stage.NotStarted && <Settings user={props.user} />}
       </span>
       <TimerDisplay timer={timer} />
     </div>

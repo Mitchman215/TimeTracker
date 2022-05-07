@@ -20,12 +20,15 @@ function TimeTracker() {
   }, [user])
 
   // track currently selected class
-  const [currentClass, setClass] = useState(allClasses[0])
+  const [curClass, setClass] = useState(allClasses[0])
+
+  // track currently selected assignment
+  const [curAssignment, setAssignment] = useState('')
 
   // to be called when classSelector dropdown changes
   const handleClassSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setClass(e.target.value)
-    console.log(currentClass)
+    console.log(curClass)
   }
 
   // the available time tracking modes
@@ -71,14 +74,16 @@ function TimeTracker() {
     case Mode.PomTimer:
       selectedTracker = (
         <Pomodoro
+          currentClass={curClass}
+          currentAssignment={curAssignment}
           user={user}
-          currentClass={currentClass}
-          currentAssignment={''}
         />
       )
       break
     case Mode.Stopwatch:
-      selectedTracker = <StopWatch user={user} />
+      selectedTracker = (
+        <StopWatch currentClass={curClass} currentAssignment={curAssignment} />
+      )
       break
   }
 
@@ -109,6 +114,8 @@ function TimeTracker() {
           type="text"
           name="assignment"
           placeholder="Enter Assignment name here"
+          value={curAssignment}
+          onChange={(e) => setAssignment(e.target.value)}
         />
       </div>
     </div>

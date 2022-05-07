@@ -1,49 +1,29 @@
-import { useState } from 'react'
+import { useContext, useState } from 'react'
 import { useStopwatch } from 'react-timer-hook'
-import { useCollection } from 'react-firebase-hooks/firestore'
-import { db } from '../../firebase'
-import { collection, query, addDoc } from 'firebase/firestore'
-import { doc } from 'firebase/firestore'
 import { formatTime } from './pomodoro/TimerDisplay'
-import { UserProp } from '../../models/User'
+import UserContext from '../../models/UserContext'
 
-//enrolled classes must have a name field and an id field that matches their reference id
+interface StopWatchProps {
+  currentClass: string
+  currentAssignment: string
+}
 
-function StopWatch(props: UserProp) {
+function StopWatch({ currentClass }: StopWatchProps) {
+  // get the user from the context
+  const user = useContext(UserContext)
+  if (user === null) {
+    throw new Error('No user logged in')
+  }
+
   //Stopwatch object
   const { seconds, minutes, hours, isRunning, start, pause, reset } =
     useStopwatch({ autoStart: false })
 
-  //user id (will be changed the the current logged in user once integrated)
-  const userId = props.user.uid
-
   //track start time
   const [startTime, setStart] = useState(new Date())
 
-  //access the users enrolled classes
-  const recordsRef = collection(db, 'users', userId, 'records')
-
-  //get names of all enrolled classes
-  const userClassesRef = collection(db, 'users', userId, 'classes')
-  const [value, loading, error] = useCollection(query(userClassesRef))
-
-  const docs = value?.docs
-  const classes: string[] = []
-  const classMap = new Map()
-  if (docs !== undefined) {
-    for (let i = 0; i < docs?.length; i++) {
-      const jsonString: string = JSON.stringify(docs[i].data())
-      const obj = JSON.parse(jsonString)
-      classes.push(obj.name)
-      classMap.set(obj.name, obj.id)
-    }
-  }
-
   //keep track of whether timer is running
   const [started, setStarted] = useState(false)
-
-  //track currently selected class
-  const [currentClass, setClass] = useState(classes[0])
 
   //when stopwatch starts
   function startTimer() {
@@ -68,37 +48,12 @@ function StopWatch(props: UserProp) {
     startPauseResumeButton = <button onClick={start}>Resume</button>
   }
 
-  //save a record of study session
-  async function addRecord() {
-    let theClass: string
-    const finishTime = new Date()
-    if (currentClass === undefined) {
-      theClass = classes[0]
-    } else {
-      theClass = currentClass
-    }
-    const ref: string = classMap.get(theClass)
-    console.log(theClass)
-    console.log(ref)
-    await addDoc(recordsRef, {
-      class: doc(db, 'classes', ref),
-      class_name: theClass,
-      start: startTime,
-      finish: finishTime,
-      duration: hours * 3600 + minutes * 60 + seconds,
-    })
-  }
-
   //when log study time is pressed
   function logRecord() {
-    addRecord()
+    const timeStudied = seconds + 60 * minutes + 3600 * hours
+    user?.logRecord(currentClass, startTime, timeStudied)
     reset(undefined, false)
     setStarted(false)
-  }
-
-  const handleSelect = (e: any) => {
-    setClass(e)
-    console.log(currentClass)
   }
 
   function handleReset() {

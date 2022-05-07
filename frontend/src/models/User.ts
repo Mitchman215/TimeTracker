@@ -6,11 +6,11 @@ import {
   addDoc,
   getDocs,
   doc,
-  getDoc,
-  DocumentSnapshot,
   query,
   collection,
   setDoc,
+  updateDoc,
+  getDoc,
 } from 'firebase/firestore'
 import { db } from '../firebase'
 import { defaultPomSettings, PomTimerSettings } from './PomTimerSettings'
@@ -65,8 +65,11 @@ export default class User {
     // todo: implement maybe
   }
 
-  async saveNewSettings() {
-    // todo: implement
+  // saves new settings to firestore
+  async saveNewSettings(newSettings: PomTimerSettings) {
+    updateDoc(doc(db, 'users', this.uid), {
+      pom_timer_settings: newSettings,
+    })
   }
 }
 
@@ -96,31 +99,27 @@ const userConverter = {
   },
 }
 
-// returns a User object that repersents the currently logged in user
-export async function getCurrentUser() {
-  // current user id, to be replaced
-  const userId = 'QpDjNV8TwCqg1hWNNtE5'
-  const userRef = doc(db, 'users', userId).withConverter(userConverter)
-  const userSnap: DocumentSnapshot<User> = await getDoc(userRef)
-  if (userSnap.exists()) {
-    return userSnap.data()
-  } else {
-    throw new Error(`No user with uid "${userId}" exists in the database`)
-  }
+export function getUserDataRef(userId: string) {
+  return doc(db, 'users', userId).withConverter(userConverter)
 }
 
-export async function getOrCreateUser(authUser: AuthUser) {
-  const userRef = doc(db, 'users', authUser.uid).withConverter(userConverter)
-  const userSnap: DocumentSnapshot<User> = await getDoc(userRef)
-  if (userSnap.exists()) {
-    return userSnap.data()
-  } else {
+/**
+ * creates the initial user doc in the 'users' collection in firestore
+ * if it doesn't exist already.
+ * @param authUser the currently logged in and authenticated user auth object
+ */
+export async function createInitialUserDoc(authUser: AuthUser) {
+  const userRef = getUserDataRef(authUser.uid)
+  // check to make sure user doc doesn't already exist in the collection
+  const initialSnapshot = await getDoc(userRef)
+  if (!initialSnapshot.exists()) {
     // user doc does not exist in users collection, so create it
     console.log(`creating user doc for ${authUser.uid}`)
     await setDoc(doc(db, 'users', authUser.uid), {
       email: authUser.email,
       pom_timer_settings: defaultPomSettings,
     })
-    return new User(authUser.uid, authUser.email, defaultPomSettings)
+  } else {
+    console.log(`user doc for ${authUser.uid} exists already`)
   }
 }
