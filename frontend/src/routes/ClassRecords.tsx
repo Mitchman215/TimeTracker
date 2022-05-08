@@ -5,21 +5,24 @@ import { doc } from 'firebase/firestore'
 import { db } from '../firebase'
 import { useDocumentDataOnce } from 'react-firebase-hooks/firestore'
 import Card from '../components/Card'
-import { User } from 'firebase/auth'
+import { useContext } from 'react'
+import UserContext from '../models/UserContext'
 
 type ClassURLParams = {
   classId: string
 }
 
-type ClassProps = {
-  user: User
-}
-
-export default function ClassRecords({ user }: ClassProps) {
+export default function ClassRecords() {
   const { classId } = useParams() as ClassURLParams
 
   const classDoc = doc(db, 'classes', classId)
   const [value, loading, error] = useDocumentDataOnce(classDoc)
+
+  // get user from context
+  const user = useContext(UserContext)
+  if (user === null) {
+    throw new Error('No user logged in')
+  }
 
   return (
     <>

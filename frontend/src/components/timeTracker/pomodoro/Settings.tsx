@@ -2,30 +2,28 @@ import { useState } from 'react'
 import Modal from 'react-modal'
 import { IoMdSettings } from 'react-icons/io'
 import { MdClose } from 'react-icons/md'
-import { User } from './Pomodoro'
 import TimeInput from './TimeInput'
+import User from '../../../models/User'
+import { defaultPomSettings, PomSettings } from '../../../models/PomSettings'
 
 // ensures background content is hidden for screen readers when settings is open
 Modal.setAppElement('#root')
 
 interface SettingsProp {
   user: User
-  setUser: (newUser: User) => void
 }
-
-// default pomodoro workflow settings (change to match comments before final submission)
-const defaultWork = 0.25 * 60 // 25 minutes
-const defaultShortBreak = 0.1 * 60 // 5 minutes
-const defaultLongBreak = 0.5 * 60 // 15 minutes
-const defaultNumPoms = 2 // after this many work sessions are completed, take long break
 
 // Component for the settings modal for the Pomodoro Timer.
 // Allows the user to change the timer duration and other setting
 function Settings(props: SettingsProp) {
+  // whether the settings modal is open
   const [isOpen, setIsOpen] = useState(false)
-  const [workTime, setWorkTime] = useState(props.user.pomWork)
-  const [shortBreakTime, setShortBreakTime] = useState(props.user.pomShortBreak)
-  const [longBreakTime, setLongBreakTime] = useState(props.user.pomLongBreak)
+  const { workDuration, shortBreakDuration, longBreakDuration, pomsPerSet } =
+    props.user.pomSettings
+  const [workTime, setWorkTime] = useState(workDuration)
+  const [shortBreakTime, setShortBreakTime] = useState(shortBreakDuration)
+  const [longBreakTime, setLongBreakTime] = useState(longBreakDuration)
+  const [numPomsInSet, setNumPoms] = useState(2)
 
   // close the settings modal
   function closeSettings() {
@@ -36,21 +34,25 @@ function Settings(props: SettingsProp) {
   function saveSettings() {
     console.log('Saving settings')
     // TODO push changes to firestore
+
     if (workTime === undefined) {
-      setWorkTime(defaultWork)
+      setWorkTime(defaultPomSettings.workDuration)
     }
     if (shortBreakTime === undefined) {
-      setShortBreakTime(defaultShortBreak)
+      setShortBreakTime(defaultPomSettings.shortBreakDuration)
     }
     if (longBreakTime === undefined) {
-      setLongBreakTime(defaultLongBreak)
+      setLongBreakTime(defaultPomSettings.longBreakDuration)
     }
-    props.setUser({
-      ...props.user,
-      pomWork: workTime! * 60,
-      pomShortBreak: shortBreakTime! * 60,
-      pomLongBreak: longBreakTime! * 60,
-    })
+
+    const newPomSettings: PomSettings = {
+      workDuration: workTime,
+      shortBreakDuration: shortBreakTime,
+      longBreakDuration: longBreakTime,
+      pomsPerSet: numPomsInSet,
+    }
+
+    props.user.saveNewSettings(newPomSettings)
 
     closeSettings()
   }

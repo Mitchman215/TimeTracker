@@ -1,9 +1,7 @@
 import { db } from '../firebase'
-
 import {
   collection,
   query,
-  addDoc,
   orderBy,
   QueryDocumentSnapshot,
   DocumentData,
@@ -11,17 +9,19 @@ import {
   setDoc,
 } from 'firebase/firestore'
 import { useCollection } from 'react-firebase-hooks/firestore'
-import { FormEvent, useState } from 'react'
+import { useContext, useState } from 'react'
 import leven from 'leven'
-import { User } from 'firebase/auth'
+import UserContext from '../models/UserContext'
+import NewClassForm from './NewClassForm'
 
-type UserClassesProps = {
-  user: User
-}
-
-export default function UserClasses({ user }: UserClassesProps) {
+export default function UserClasses() {
+  // get the user from the context
+  const user = useContext(UserContext)
+  if (user === null) {
+    throw new Error('No user logged in')
+  }
   // a given user's data for their classes
-  const userClassesDB = collection(db, 'users', user.uid, 'classes')
+  const userClassesDB = user.classesRef
   const [userClassesSnapshot, loading, error] = useCollection(userClassesDB)
 
   // all aggregated class data
@@ -76,26 +76,6 @@ export default function UserClasses({ user }: UserClassesProps) {
     setSuggestions([distances[0][0], distances[1][0], distances[2][0]])
   }
 
-  // state variables for a new class and its department inputted by the user
-  const [newClassName, setNewClassName] = useState('')
-  const [newClassDepartment, setNewClassDepartment] = useState('')
-
-  // creates a new class in the collection of classes and sets its averages and total time to 0
-  async function addClass(event: FormEvent) {
-    event.preventDefault()
-    if (allClassesMap.has(newClassName)) {
-      console.log('User tried to add a class that already exists')
-    } else {
-      await addDoc(allClassesDB, {
-        daily_average: '0',
-        department: newClassDepartment,
-        name: newClassName,
-        total_time: '0',
-        weekly_average: '0',
-      })
-    }
-  }
-
   // takes in an existing class name selected by the user, and adds the corresponding class to the user's list of current classes
   function addClassToUser(className: string) {
     if (userClassNames.includes(className)) {
@@ -148,27 +128,10 @@ export default function UserClasses({ user }: UserClassesProps) {
         </div>
 
         <div>
-          <h1 className="text-gray-900 text-xl leading-tight font-medium mb-2">
+          <h1 className="text-gray-900 text-xl leading-tight font-medium">
             Can't find one of your classes? Add it here
           </h1>
-          <form>
-            <input
-              value={newClassDepartment}
-              placeholder="Class department"
-              onChange={(e) => setNewClassDepartment(e.target.value)}
-            />
-            <input
-              value={newClassName}
-              placeholder="Class name"
-              onChange={(e) => setNewClassName(e.target.value)}
-            />
-            <button
-              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-              onClick={addClass}
-            >
-              Submit
-            </button>
-          </form>
+          <NewClassForm />
         </div>
       </div>
     </section>

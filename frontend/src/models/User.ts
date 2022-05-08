@@ -6,13 +6,16 @@ import {
   addDoc,
   getDocs,
   doc,
-  getDoc,
-  DocumentSnapshot,
   query,
   collection,
+  setDoc,
+  updateDoc,
+  getDoc,
 } from 'firebase/firestore'
 import { db } from '../firebase'
-import { defaultPomSettings, PomTimerSettings } from './PomTimerSettings'
+import { defaultPomSettings, PomSettings } from './PomSettings'
+import { User as AuthUser } from 'firebase/auth'
+import Class, { classConverter } from './Class'
 
 // Represents a user's data. Mirrors user data in firestore
 export default class User {
@@ -20,13 +23,16 @@ export default class User {
 
   readonly classesRef: CollectionReference<DocumentData>
 
+  readonly typedClassesRef: CollectionReference<Class>
+
   constructor(
-    readonly id: string,
-    readonly email: string,
-    readonly pomTimerSettings: PomTimerSettings = defaultPomSettings
+    readonly uid: string,
+    readonly email: string | null,
+    readonly pomSettings: PomSettings = defaultPomSettings
   ) {
-    this.recordsRef = collection(db, 'users', this.id, 'records')
-    this.classesRef = collection(db, 'users', this.id, 'classes')
+    this.recordsRef = collection(db, 'users', this.uid, 'records')
+    this.classesRef = collection(db, 'users', this.uid, 'classes')
+    this.typedClassesRef = this.classesRef.withConverter(classConverter)
   }
 
   toString(): string {
@@ -58,6 +64,17 @@ export default class User {
     console.log({ classes })
     return classes
   }
+
+  async enrollInExistingClass() {
+    // todo: implement maybe
+  }
+
+  // saves new settings to firestore
+  async saveNewSettings(newSettings: PomSettings) {
+    updateDoc(doc(db, 'users', this.uid), {
+      pom_settings: newSettings,
+    })
+  }
 }
 
 export interface UserProp {
@@ -65,17 +82,21 @@ export interface UserProp {
 }
 
 // Firestore data converter for User
-export const userConverter = {
+const userConverter = {
   toFirestore(user: User): DocumentData {
+    const {
+      workDuration: work,
+      shortBreakDuration: sBreak,
+      longBreakDuration: lBreak,
+      pomsPerSet: numPoms,
+    } = user.pomSettings
     return {
       email: user.email,
-      records: user.recordsRef,
-      classes: user.classesRef,
-      pom_timer_settings: {
-        work_duration: user.pomTimerSettings.workDuration,
-        short_break_duration: user.pomTimerSettings.shortBreakDuration,
-        long_break_duration: user.pomTimerSettings.longBreakDuration,
-        poms_per_set: user.pomTimerSettings.pomsPerSet,
+      pom_settings: {
+        work_duration: work,
+        short_break_duration: sBreak,
+        long_break_duration: lBreak,
+        poms_per_set: numPoms,
       },
     }
   },
@@ -84,18 +105,31 @@ export const userConverter = {
     options: SnapshotOptions
   ): User {
     const data = snapshot.data(options)
-    return new User(snapshot.id, data.email, data.pom_timer_settings)
+    return new User(snapshot.id, data.email, data.pom_settings)
   },
 }
 
-export async function getCurrentUser() {
-  // current user id, to be replaced
-  const userId = 'QpDjNV8TwCqg1hWNNtE5'
-  const userRef = doc(db, 'users', userId).withConverter(userConverter)
-  const userSnap: DocumentSnapshot<User> = await getDoc(userRef)
-  if (userSnap.exists()) {
-    return userSnap.data()
+export function getUserDataRef(userId: string) {
+  return doc(db, 'users', userId).withConverter(userConverter)
+}
+
+/**
+ * creates the initial user doc in the 'users' collection in firestore
+ * if it doesn't exist already.
+ * @param authUser the currently logged in and authenticated user auth object
+ */
+export async function createInitialUserDoc(authUser: AuthUser) {
+  const userRef = getUserDataRef(authUser.uid)
+  // check to make sure user doc doesn't already exist in the collection
+  const initialSnapshot = await getDoc(userRef)
+  if (!initialSnapshot.exists()) {
+    // user doc does not exist in users collection, so create it
+    console.log(`creating user doc for ${authUser.uid}`)
+    await setDoc(doc(db, 'users', authUser.uid), {
+      email: authUser.email,
+      pom_settings: defaultPomSettings,
+    })
   } else {
-    throw new Error(`No user with id "${userId}" exists in the database`)
+    console.log(`user doc for ${authUser.uid} exists already`)
   }
 }

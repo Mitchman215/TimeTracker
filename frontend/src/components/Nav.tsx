@@ -1,4 +1,3 @@
-import { render } from '@testing-library/react'
 import { Link } from 'react-router-dom'
 import { auth } from '../firebase'
 import clock from '../images/clock.png'
@@ -17,18 +16,15 @@ export default function Nav() {
         </Link>
       </div>
       <div className="flex justify-center col-span-1">
-        <Link to="/stopwatcher">
+        <Link to="/timetracker">
           <div className="bg-white rounded-full w-12 h-12">
             <img src={clock} />
           </div>
         </Link>
       </div>
       <div className="flex justify-end col-span-1">
-        <Link to="/stopwatcher" className="btn-white">
+        <Link to="/timetracker" className="btn-white">
           Start Studying
-        </Link>
-        <Link to="/timer" className="btn-white">
-          Timer
         </Link>
       </div>
       <div className="flex justify-end col-span-3">
