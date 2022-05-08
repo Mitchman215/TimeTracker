@@ -60,7 +60,7 @@ function NewClassForm() {
   return (
     <form>
       <span className="flex flex-row my-2">
-        <label className="flex flex-col mr-4">
+        <label className="flex flex-col mr-4 underline">
           Department
           <input
             className="w-20"
@@ -69,7 +69,7 @@ function NewClassForm() {
             onChange={(e) => setNewClassDepartment(e.target.value)}
           />
         </label>
-        <label className="flex flex-col">
+        <label className="flex flex-col underline">
           Number
           <input
             className="w-20"
@@ -79,7 +79,7 @@ function NewClassForm() {
           />
         </label>
       </span>
-      <label className="flex flex-col my-2">
+      <label className="flex flex-col my-2 underline">
         Class name
         <input
           value={newClassName}
