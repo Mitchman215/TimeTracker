@@ -81,9 +81,20 @@ export default function UserClasses() {
         'User tried to add a class they already have, should be impossible'
       )
     } else {
-      setDoc(doc(userClassesDB, classId), new UserClass(classId, 'name'))
-      // remove the added class from the suggestions
-      setSuggestions(suggestions.filter((suggestion) => suggestion !== classId))
+      const className = allClassesMap.get(classId)
+      if (className) {
+        setDoc(doc(userClassesDB, classId), new UserClass(classId, className))
+        // remove the added class from the suggestions
+        setSuggestions(
+          suggestions.filter((suggestion) => suggestion !== classId)
+        )
+      } else {
+        // className was either blank or undefined
+        console.error(
+          `Database error: the stored name for class with id "${classId}" in firestore was blank or undefined.`
+        )
+        console.log({ allClassesMap })
+      }
     }
   }
 
