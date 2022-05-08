@@ -24,7 +24,7 @@ function ErrorPage({ error }: ErrorPageProps) {
         <h1 className="text-2xl m-2 text-white font-semibold drop-shadow-md">
           An error occured!
         </h1>
-        <p className="text-red-400 text-xl m-2 drop-shadow-sm italic">
+        <p className="text-red-error text-xl m-2 drop-shadow-sm italic">
           {error.toString()}
         </p>
         <button className="btn-purple my-2" onClick={redirectToHome}>
