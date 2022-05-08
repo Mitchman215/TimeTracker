@@ -10,7 +10,7 @@ export interface PomSettings {
 // TODO: change to false after done testing
 // controls whether the default pom settings are in testing mode or not.
 // testing mode has shorter durations (15s, 6s, 12s)
-const testing = true
+const testing = false
 
 // default pomodoro workflow settings
 const defaultWork = (testing ? 0.25 : 25) * 60 // 25 minutes in production mode

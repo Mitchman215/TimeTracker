@@ -19,7 +19,6 @@ enum Stage {
   LongBreak,
 }
 
-// default pomodoro workflow settings (change to match comments before final submission)
 const defaultNumPoms = 2 // after this many work sessions are completed, take long break
 
 function Pomodoro(props: PomodoroProp) {
@@ -49,9 +48,7 @@ function Pomodoro(props: PomodoroProp) {
         }
         // log the study session in firebase
         props.user.logRecord(props.currentClass, start, duration)
-        // increment the poms finished
-        setPomsFinished(pomsFinished + 1)
-        if (pomsFinished >= defaultNumPoms) {
+        if (pomsFinished + 1 >= defaultNumPoms) {
           // user has finished set of pomodoros, take a long break
           setStage(Stage.LongBreak)
           setPomsFinished(0)
@@ -59,6 +56,8 @@ function Pomodoro(props: PomodoroProp) {
           // user not done with set yet, take short break
           setStage(Stage.ShortBreak)
         }
+        // increment the poms finished
+        setPomsFinished(pomsFinished + 1)
       }
       break
     case Stage.ShortBreak:

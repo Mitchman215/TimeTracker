@@ -18,7 +18,6 @@ interface Timer {
 
 interface TimerDisplayProp {
   timer: Timer
-  displayBgColor?: string // tailwind-css color name that dictates the color behind the display time
 }
 
 // formats a number representing a time correctly
@@ -80,9 +79,7 @@ export default function TimerDisplay(props: TimerDisplayProp) {
 
   return (
     <div className="bg-orange-light flex flex-col items-center p-4 rounded-md">
-      <div
-        className={`bg-orange-medium text-8xl p-4 m-2 rounded-md shadow-md bg-${props.displayBgColor}`}
-      >
+      <div className={`bg-orange-medium text-8xl p-4 m-2 rounded-md shadow-md`}>
         {timerDisplayString}
       </div>
       <span>
