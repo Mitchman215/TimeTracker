@@ -3,11 +3,20 @@ import React, { FC, useState } from 'react'
 import { RecordClassDoc } from '../../types'
 import GraphBackground from './GraphBackground'
 
+/**
+ * Interface for graph layout
+ */
 export interface GraphLayoutProps {
   children: RecordClassDoc[]
   user: string
 }
 
+/**
+ * The graph layout
+ * @param children the records of the user
+ * @param user the email address of the user
+ * @returns Creates a graph layout
+ */
 const GraphLayout: FC<GraphLayoutProps> = ({ children, user }) => {
   const [className, setClassName] = useState('')
   const [startStamp, setStartStamp] = useState('')

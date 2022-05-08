@@ -2,6 +2,9 @@ import { FC } from 'react'
 import Bars from './Bars'
 import { RecordClassDoc } from '../../types'
 
+/**
+ * Interface for graph background
+ */
 export interface GraphBackgroundProps {
   children: RecordClassDoc[]
   user: string
@@ -11,6 +14,16 @@ export interface GraphBackgroundProps {
   setDuration: (duration: string) => void
 }
 
+/**
+ * Creates a graph background
+ * @param children the records of a user
+ * @param user the user's email address
+ * @param setClassName a function to set the class name on the modal
+ * @param setStartStamp a function to set the start time on the modal
+ * @param setFinishStamp a function to set the finish time on the modal
+ * @param setDuration a function to set the duration on the modal
+ * @returns A graph background
+ */
 const GraphBackground: FC<GraphBackgroundProps> = ({
   children,
   user,

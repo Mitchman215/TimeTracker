@@ -1,6 +1,9 @@
 import { Box } from '@mui/material'
 import React, { FC, useState } from 'react'
 
+/**
+ * TimeBar interface
+ */
 export interface TimeBarProps {
   setDay: (day: boolean) => void
   setWeek: (week: boolean) => void
@@ -8,6 +11,15 @@ export interface TimeBarProps {
   setDisplay: (display: string[]) => void
 }
 
+/**
+ * Bar on the graph that allows the user to select the time period of comparison:
+ * D - day, W - week, M - month
+ * @param setDay Function to set whether or not the days are displayed as bars
+ * @param setWeek Function to set whether or not the weeks are displayed as bars
+ * @param setMonth Function to set whether or not the months are displayes as bars
+ * @param setDisplay Function to set the passive display of the hovering modal
+ * @returns The display of the time bar
+ */
 const TimeBar: FC<TimeBarProps> = ({
   setDay,
   setWeek,

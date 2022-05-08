@@ -1,6 +1,9 @@
 import { Box } from '@mui/material'
 import { FC, useState } from 'react'
 
+/**
+ * Interface for compbars
+ */
 export interface CompBarsProps {
   name: string
   dailyAvg: number
@@ -12,6 +15,18 @@ export interface CompBarsProps {
   setTotalTime: (time: string) => void
 }
 
+/**
+ * Creates a column for the bar graph and manages a state of the hovering descriptor
+ * @param name The name of the class or department
+ * @param dailyAvg The average time spent during a day
+ * @param weeklyAvg The average time spent over the course of a week
+ * @param totalTime The total time for the course
+ * @param setName Function to put the input name on the modal to the left
+ * @param setDailyAvg Function to post daily avg
+ * @param setWeeklyAvg Function to post weekly avg
+ * @param setTotalTime Function to post total time
+ * @returns A column in a graph
+ */
 const CompBars: FC<CompBarsProps> = ({
   name,
   dailyAvg,
