@@ -39,7 +39,7 @@ const ClassesComp = () => {
 
   return (
     <section className="bg-black w-full rounded-lg p-10">
-      <h1 className="text-white font-bold">My Classes</h1>
+      <h1 className="text-white font-bold">Class Comparison Visualizer</h1>
       <CompGraphLayout children={classChildren} type={'Class'} />
     </section>
   )
