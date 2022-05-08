@@ -8,11 +8,15 @@ import {
   doc,
   setDoc,
 } from 'firebase/firestore'
-import { useCollection } from 'react-firebase-hooks/firestore'
+import {
+  useCollection,
+  useCollectionData,
+} from 'react-firebase-hooks/firestore'
 import { useContext, useState } from 'react'
 import leven from 'leven'
 import UserContext from '../models/UserContext'
 import NewClassForm from './NewClassForm'
+import UserClass from '../models/UserClass'
 
 export default function UserClasses() {
   // get the user from the context
@@ -21,74 +25,65 @@ export default function UserClasses() {
     throw new Error('No user logged in')
   }
   // a given user's data for their classes
-  const userClassesDB = user.classesRef
-  const [userClassesSnapshot, loading, error] = useCollection(userClassesDB)
+  const userClassesDB = user.typedClassesRef
+  const [userClasses, loading, error] = useCollectionData(userClassesDB)
+
+  // the user's current classes to display
+  const userClassIds: string[] = userClasses ? userClasses.map((c) => c.id) : []
 
   // all aggregated class data
-  const [allClasses, setAllClasses] = useState(new Map())
   const allClassesDB = collection(db, 'classes')
-  const [classValue, classLoading, classError] = useCollection(
+  const [allClassesQuery, classLoading, classError] = useCollection(
     query(allClassesDB, orderBy('department'))
   )
 
-  // loads and sets in the user's current classes to display
-  const docs1: QueryDocumentSnapshot<DocumentData>[] | undefined =
-    userClassesSnapshot?.docs
-  const userClassNames: string[] = []
-  if (docs1 !== undefined) {
-    for (let i = 0; i < docs1?.length; i++) {
-      const jsonString: string = JSON.stringify(docs1[i].data())
-      const obj = JSON.parse(jsonString)
-      userClassNames.push(obj.name)
-    }
-  }
+  // loads in every class into a hashmap with the key being the id and the value being the class's name
+  const classDocs: QueryDocumentSnapshot<DocumentData>[] =
+    allClassesQuery !== undefined ? allClassesQuery.docs : []
+  const allClassesMap: Map<string, string> = new Map()
+  classDocs.forEach((d) => allClassesMap.set(d.id, d.data.name))
 
-  // state variable for top three suggestions while searching
-  const [suggestions, setSuggestions]: any[] = useState([])
+  // state variable for suggestions while searching
+  const [suggestions, setSuggestions] = useState<string[]>([])
+  const numSuggestions = 10 // controls how many suggestions are displayed
 
-  // loads in every class into a hashmap with the key being the name and the value being the firebase reference
-  const classDocs: QueryDocumentSnapshot<DocumentData>[] | undefined =
-    classValue?.docs
-  const allClassesMap = new Map()
-  if (classDocs !== undefined) {
-    for (let i = 0; i < classDocs?.length; i++) {
-      const jsonString: string = JSON.stringify(classDocs[i].data())
-      const ref = classDocs[i].ref
-      const obj = JSON.parse(jsonString)
-      allClassesMap.set(obj.name, ref)
-    }
+  interface IdDistance {
+    id: string
+    distance: number
   }
 
   // takes in a string from the user input in the search bar, and returns the top three most similar class names
   // based on levenstein distance
   function closestVals(userSearch: string) {
-    const distances = []
+    const distances: IdDistance[] = []
     const keys = Array.from(allClassesMap.keys())
     // for each class, the levenstein distance is computed and stored in a 2-D array to be sorted by distance
     for (let i = 0; i < keys.length; i++) {
-      const distance = leven(userSearch.toLowerCase(), keys[i].toLowerCase())
-      distances.push([keys[i], distance])
+      const distance = leven(userSearch.toUpperCase(), keys[i].toUpperCase())
+      distances.push({ id: keys[i], distance })
     }
+    // sort suggestions by distances
     distances.sort((first, second) => {
-      return first[1] - second[1]
+      return first.distance - second.distance
     })
-    // sets the three smallest levenstein distanes as suggestions
-    setSuggestions([distances[0][0], distances[1][0], distances[2][0]])
+    // sets suggestions to the most similar classes' ids that the user doesn't have already
+    const results = distances
+      .map((d) => d.id)
+      .filter((id) => !userClassIds.includes(id))
+      .slice(0, numSuggestions)
+    setSuggestions(results)
   }
 
   // takes in an existing class name selected by the user, and adds the corresponding class to the user's list of current classes
-  function addClassToUser(className: string) {
-    if (userClassNames.includes(className)) {
-      console.log('User tried to add a class they already have.')
+  function addClassToUser(classId: string) {
+    if (userClassIds.includes(classId)) {
+      console.warn(
+        'User tried to add a class they already have, should be impossible'
+      )
     } else {
-      setDoc(doc(userClassesDB, className), {
-        class: allClassesMap.get(className),
-        daily_averages: [],
-        id: allClassesMap.get(className).id,
-        monthly_averages: [],
-        name: className,
-        weekly_averages: [],
-      })
+      setDoc(doc(userClassesDB, classId), new UserClass(classId, 'name'))
+      // remove the added class from the suggestions
+      setSuggestions(suggestions.filter((suggestion) => suggestion !== classId))
     }
   }
 
@@ -100,7 +95,7 @@ export default function UserClasses() {
             Current Classes
           </h1>
           <ul className="list-disc">
-            {userClassNames.map((name: string) => (
+            {userClassIds.map((name: string) => (
               <li key={name}>{name}</li>
             ))}
           </ul>

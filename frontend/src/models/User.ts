@@ -15,7 +15,7 @@ import {
 import { db } from '../firebase'
 import { defaultPomSettings, PomSettings } from './PomSettings'
 import { User as AuthUser } from 'firebase/auth'
-import Class, { classConverter } from './Class'
+import UserClass, { classConverter } from './UserClass'
 
 // Represents a user's data. Mirrors user data in firestore
 export default class User {
@@ -23,7 +23,7 @@ export default class User {
 
   readonly classesRef: CollectionReference<DocumentData>
 
-  readonly typedClassesRef: CollectionReference<Class>
+  readonly typedClassesRef: CollectionReference<UserClass>
 
   constructor(
     readonly uid: string,
