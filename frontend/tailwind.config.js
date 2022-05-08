@@ -22,8 +22,9 @@ module.exports = {
           'medium': '#8b5cf6',
           'dark': '#6d28d9'
         },
-        'silver': '#e1e3e7'
-
+        'silver': '#e1e3e7',
+        'red-error': '#f87171',
+        'green-success': '#4ade80'
       },
     },
   },
