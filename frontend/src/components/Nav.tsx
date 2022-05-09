@@ -34,6 +34,26 @@ export default function Nav() {
           </button>
         </div>
       </div>
+      <div className="flex justify-end col-span-6">
+        <Link to="/records" className="btn-white">
+          Records
+        </Link>
+      </div>
+      <div className="flex justify-end col-span-10">
+        <Link to="/departments" className="btn-white">
+          Departments
+        </Link>
+      </div>
+      <div className="flex justify-end col-span-10">
+        <Link to="/classes" className="btn-white">
+          Classes
+        </Link>
+      </div>
+      <div className="flex justify-end col-span-10">
+        <Link to="/user" className="btn-white">
+          User Comparison
+        </Link>
+      </div>
     </nav>
   )
 }

@@ -4,11 +4,20 @@ import { DptClassDoc } from '../../types'
 import CompGraphBackground from './CompGraphBackground'
 import ModalBar from './ModalBar'
 
+/**
+ * Interface for compgraphlayout props
+ */
 export interface CompGraphLayoutProps {
   children: DptClassDoc[]
   type: string
 }
 
+/**
+ * Creates a container for a graph and a modal
+ * @param children The departments or classes to be displayed as bars
+ * @param type Department or class
+ * @returns The container for a graph and a modal for hovering/adding bars
+ */
 const CompGraphLayout: FC<CompGraphLayoutProps> = ({ children, type }) => {
   const [name, setName] = useState('')
   const [dailyAvg, setDailyAvg] = useState('')
@@ -18,6 +27,9 @@ const CompGraphLayout: FC<CompGraphLayoutProps> = ({ children, type }) => {
   const empty: DptClassDoc[] = []
   const [editChildren, setEditChildren] = useState(empty)
 
+  /**
+   * Changes the modal back to a display for hovering
+   */
   function closeModal(): void {
     setModal(false)
   }

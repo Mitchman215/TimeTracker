@@ -13,8 +13,6 @@ import java.util.stream.Stream;
 
 import javax.annotation.Nonnull;
 
-import edu.brown.cs.student.csv.CSVParser;
-
 /**
  * A non-instantiable command-line style REPL (read-eval-print loop).
  * Users can execute commands with arguments from standard input.
@@ -187,7 +185,7 @@ public final class Repl {
      * @return      a list of substrings representing the distinct tokens in the input
      */
     private List<String> splitUserInput(String input) {
-      return CSVParser.createStringSplitter("\"", "[\\s]+", true)
+      return Util.createStringSplitter("\"", "[\\s]+", true)
           .apply(input);
     }
 

@@ -5,10 +5,18 @@ import DropDownBar from './DropDownBar'
 import TimeBar from './TimeBar'
 import UserBars from './UserBars'
 
+/**
+ * Interface of userclassmenu
+ */
 export interface UserClassMenuProps {
   children: UserClassDoc[]
 }
 
+/**
+ * The dropdown menu for a user to select their classes to compare
+ * @param children The classes the user is taking
+ * @returns The dropdown menu
+ */
 const UserClassMenu: FC<UserClassMenuProps> = ({ children }) => {
   const [dropdown, setDropDown] = useState(false)
   const empty: UserClassDoc[] = []
@@ -24,6 +32,9 @@ const UserClassMenu: FC<UserClassMenuProps> = ({ children }) => {
   const monthlyInitial = [`Class:`, `Average:`, `Month:`]
   const displays = [dailyInitial, weeklyInitial, monthlyInitial]
 
+  /**
+   * Reverses the state of the dropdown display (on or off)
+   */
   function dropdownSwitch(): void {
     setDropDown(!dropdown)
   }

@@ -7,11 +7,14 @@ import ClassRecords from './routes/ClassRecords'
 import NotFound from './routes/NotFound'
 import { useAuthState } from 'react-firebase-hooks/auth'
 import { auth } from './firebase'
-import Classes from './components/Classes'
 import { createInitialUserDoc, getUserDataRef } from './models/User'
 import UserContext from './models/UserContext'
 import { useDocumentData } from 'react-firebase-hooks/firestore'
 import SignInPage from './components/SignInPage'
+import UserRecordsRoute from './routes/UserRecordsRoute'
+import DptCompRoute from './routes/DptCompRoute'
+import ClassesCompRoute from './routes/ClassesCompRoute'
+import UserCompRoute from './routes/UserCompRoute'
 
 // some logic here to make sure Nav doesn't render unless logged in.
 export default function App() {
@@ -35,7 +38,10 @@ export default function App() {
               <Route path="timetracker" element={<Timetrack />} />
               <Route path="auth" element={<Navigate replace to="/" />} />
               <Route path="class" element={<Class />} />
-              <Route path="data" element={<Classes />} />
+              <Route path="records" element={<UserRecordsRoute />} />
+              <Route path="departments" element={<DptCompRoute />} />
+              <Route path="classes" element={<ClassesCompRoute />} />
+              <Route path="user" element={<UserCompRoute />} />
               <Route path="class/:classId" element={<ClassRecords />} />
               <Route path="*" element={<NotFound />} />
             </Routes>

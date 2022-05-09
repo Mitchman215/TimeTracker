@@ -7,6 +7,9 @@ import {
   WeeklyAverage,
 } from '../../types'
 
+/**
+ * Inteface of UserBars
+ */
 export interface UserBarsProps {
   day: boolean
   week: boolean
@@ -16,6 +19,16 @@ export interface UserBarsProps {
   setDisplay: (display: string[]) => void
 }
 
+/**
+ * Creates a bar for the graph
+ * @param day Whether or not the day button is switched
+ * @param week Whether or not the week button is switched
+ * @param month Whether or not the month button is switched
+ * @param child The data representing the bar
+ * @param display The data that should be displayed when the user is not hovering
+ * @param setDisplay Function to set modal display
+ * @returns A bar for the graph
+ */
 const UserBars: FC<UserBarsProps> = ({
   day,
   week,

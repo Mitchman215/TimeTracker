@@ -2,6 +2,9 @@ import { FC } from 'react'
 import CompBars from './CompBars'
 import { DptClassDoc } from '../../types'
 
+/**
+ * Interface compgraphbackground
+ */
 export interface CompGraphBackgroundProps {
   children: DptClassDoc[]
   setName: (name: string) => void
@@ -12,6 +15,17 @@ export interface CompGraphBackgroundProps {
   type: string
 }
 
+/**
+ * Creates a graphing background
+ * @param children The departments or classes to be displayed as bars
+ * @param setName function to put state on modal
+ * @param setDailyAvg function to put daily avg on modal
+ * @param setWeeklyAvg function to put weekly avg on modal
+ * @param setTotalTime function put total time on modal
+ * @param setModal function to change appearance of modal
+ * @param type department or class
+ * @returns The background of a graph for dpt and class comparison
+ */
 const CompGraphBackground: FC<CompGraphBackgroundProps> = ({
   children,
   setName,
@@ -21,6 +35,9 @@ const CompGraphBackground: FC<CompGraphBackgroundProps> = ({
   setModal,
   type,
 }) => {
+  /**
+   * Switches the modal on the left panel to a list of departments or classes
+   */
   function changeModal(): void {
     setModal(true)
   }
