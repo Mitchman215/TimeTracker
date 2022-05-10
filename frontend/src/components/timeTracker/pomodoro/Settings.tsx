@@ -2,7 +2,7 @@ import { FormEvent, useState } from 'react'
 import Modal from 'react-modal'
 import { IoMdSettings } from 'react-icons/io'
 import { MdClose } from 'react-icons/md'
-import NumInput from './TimeInput'
+import NumInput from './NumInput'
 import { UserProp } from '../../../models/User'
 import { defaultPomSettings, PomSettings } from '../../../models/PomSettings'
 
@@ -76,60 +76,77 @@ function Settings({ user }: UserProp) {
 
     closeSettings()
   }
+  const modalStyle = {
+    overlay: {},
+    content: {
+      width: 'fit-content',
+      margin: 'auto',
+      height: 'fit-content',
+    },
+  }
 
   return (
-    <div>
-      <button className="text-2xl" onClick={() => setIsOpen(true)}>
+    <>
+      <button
+        className="text-2xl text-neutral-100"
+        onClick={() => setIsOpen(true)}
+      >
         <IoMdSettings />
       </button>
-      <Modal isOpen={isOpen}>
-        <div className="flex flex-row justify-between">
-          <h1 className="text-3xl text-bold">Settings</h1>
-          <button className="text-3xl" onClick={closeSettings}>
-            <MdClose />
-          </button>
-        </div>
-        <form>
-          <h2 className="text-xl">Time settings (in minutes)</h2>
-          <div className="flex flex-row justify-between">
+      <div className="flex justify-center">
+        <Modal isOpen={isOpen} style={modalStyle}>
+          <form className="w-96">
+            <div className="flex flex-row justify-between mb-2">
+              <h1 className="text-3xl text-bold">Settings</h1>
+              <button className="text-3xl" onClick={closeSettings}>
+                <MdClose />
+              </button>
+            </div>
+            <h2 className="text-xl">Time settings (in minutes)</h2>
+            <div className="flex flex-row justify-between">
+              <NumInput
+                name="Work"
+                value={workTime}
+                setValue={setWork}
+                default={defaultWork / 60}
+              />
+              <NumInput
+                name="Short Break"
+                value={shortBreakTime}
+                setValue={setShortBreak}
+                default={defaultSBreak / 60}
+              />
+              <NumInput
+                name="Long Break"
+                value={longBreakTime}
+                setValue={setLongBreak}
+                default={defaultLBreak / 60}
+              />
+            </div>
+            <h2 className="text-xl">Other settings</h2>
             <NumInput
-              name="Work"
-              value={workTime}
-              setValue={setWork}
-              default={defaultWork / 60}
+              name="Number of Poms per set"
+              value={numPoms}
+              setValue={setNumPoms}
+              default={defaultNumPoms}
+              min={1}
+              max={1000}
+              isInt={true}
             />
-            <NumInput
-              name="Short Break"
-              value={shortBreakTime}
-              setValue={setShortBreak}
-              default={defaultSBreak / 60}
-            />
-            <NumInput
-              name="Long Break"
-              value={longBreakTime}
-              setValue={setLongBreak}
-              default={defaultLBreak / 60}
-            />
-          </div>
-          <h2 className="text-xl">Other settings</h2>
-          <NumInput
-            name="Number of Poms per set"
-            value={numPoms}
-            setValue={setNumPoms}
-            default={defaultNumPoms}
-            min={1}
-            max={1000}
-            isInt={true}
-          />
 
-          <div className="flex mt-4">
-            <button className="btn-purple" onClick={saveSettings} type="submit">
-              Save and close
-            </button>
-          </div>
-        </form>
-      </Modal>
-    </div>
+            <div className="flex mt-4">
+              <button
+                className="btn-purple"
+                onClick={saveSettings}
+                type="submit"
+              >
+                Save and close
+              </button>
+            </div>
+          </form>
+        </Modal>
+      </div>
+    </>
   )
 }
 

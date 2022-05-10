@@ -48,7 +48,7 @@ function NumInput(props: NumInputProps) {
         name={props.name}
         value={props.value}
         onChange={handleChange}
-        className="bg-slate-100 p-1"
+        className="bg-slate-100 p-1 w-24"
       />
     </label>
   )
