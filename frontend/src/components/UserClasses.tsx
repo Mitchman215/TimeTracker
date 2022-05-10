@@ -98,6 +98,39 @@ export default function UserClasses() {
     }
   }
 
+  async function onClickClass(classId: string) {
+    if (userClassIds.includes(classId)) {
+      // make sure user wants to delete class
+      //   confirmAlert({
+      //     title: `Delete a class`,
+      //     message: `Are you sure you want to delete ${classId}? All your study records for this class will also be deleted (this can't be reversed).`,
+      //     buttons: [
+      //       {
+      //         label: 'Yes',
+      //         onClick: () => user?.deleteClass(classId),
+      //       },
+      //       {
+      //         label: 'No',
+      //         onClick: () => console.log(`Not deleting ${classId}`),
+      //       },
+      //     ],
+      //   })
+      // } else {
+      //   console.warn(
+      //     `User tried to deleta a class they don't have, should be impossible`
+      //   )
+      // }
+      const proceed = await confirm(
+        `Are you sure you want to delete ${classId}? All your study records for this class will also be deleted (this can't be reversed).`
+      )
+      if (proceed) {
+        user?.deleteClass(classId)
+      } else {
+        console.log(`Not deleting ${classId}`)
+      }
+    }
+  }
+
   return (
     <section className="bg-white rounded-lg p-4">
       <div className="grid grid-cols-3 gap-5">
@@ -107,7 +140,14 @@ export default function UserClasses() {
           </h1>
           <ul className="list-disc">
             {userClassIds.map((name: string) => (
-              <li key={name}>{name}</li>
+              <li key={name}>
+                <button
+                  className="hover:line-through "
+                  onClick={() => onClickClass(name)}
+                >
+                  {name}
+                </button>
+              </li>
             ))}
           </ul>
         </div>

@@ -225,6 +225,25 @@ export const deleteRecord = functions.firestore
     });
   });
 
+// when a user deletes a class, delete all of that user's records for that class
+export const deleteClass = functions.firestore
+  .document("users/{userId}/classes/{classId}")
+  .onDelete(async (snap, context) => {
+    const userId = context.params.userId;
+    const classId = context.params.classId;
+
+    // get all of a users' records for that class
+    const recordsToDelete = await admin.firestore()
+      .collection(`users/${userId}/records`)
+      .where("class_name", "==", classId)
+      .get();
+
+    // delete each record
+    recordsToDelete.forEach((doc) => {
+      doc.ref.delete();
+    });
+  });
+
 // at the beginning of every week update all the weekly everages
 exports.updateWeeklyAvgs = functions.pubsub
   .schedule("59 23 * * 0")
