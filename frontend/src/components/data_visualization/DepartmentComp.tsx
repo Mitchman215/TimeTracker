@@ -37,8 +37,10 @@ const DepartmentComp = () => {
   }
 
   return (
-    <section className="bg-black w-full rounded-lg p-10">
-      <h1 className="text-white font-bold">Department Comparison Visualizer</h1>
+    <section className="bg-black w-full rounded-lg p-10" id="dpt-bg">
+      <h1 className="text-white font-bold" id="title-dpt">
+        Department Comparison Visualizer
+      </h1>
       <CompGraphLayout children={dptChildren} type={'Department'} />
     </section>
   )
