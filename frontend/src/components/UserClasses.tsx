@@ -12,7 +12,7 @@ import {
   useCollection,
   useCollectionData,
 } from 'react-firebase-hooks/firestore'
-import { useContext, useEffect, useState } from 'react'
+import { useContext, useState } from 'react'
 import leven from 'leven'
 import UserContext from '../models/UserContext'
 import NewClassForm from './NewClassForm'
@@ -26,14 +26,14 @@ export default function UserClasses() {
   }
   // a given user's data for their classes
   const userClassesDB = user.typedClassesRef
-  const [userClasses, loading, error] = useCollectionData(userClassesDB)
+  const [userClasses] = useCollectionData(userClassesDB)
 
   // the user's current classes to display
   const userClassIds: string[] = userClasses ? userClasses.map((c) => c.id) : []
 
   // all aggregated class data
   const allClassesDB = collection(db, 'classes')
-  const [allClassesQuery, classLoading, classError] = useCollection(
+  const [allClassesQuery] = useCollection(
     query(allClassesDB, orderBy('department'))
   )
 
@@ -100,26 +100,6 @@ export default function UserClasses() {
 
   async function onClickClass(classId: string) {
     if (userClassIds.includes(classId)) {
-      // make sure user wants to delete class
-      //   confirmAlert({
-      //     title: `Delete a class`,
-      //     message: `Are you sure you want to delete ${classId}? All your study records for this class will also be deleted (this can't be reversed).`,
-      //     buttons: [
-      //       {
-      //         label: 'Yes',
-      //         onClick: () => user?.deleteClass(classId),
-      //       },
-      //       {
-      //         label: 'No',
-      //         onClick: () => console.log(`Not deleting ${classId}`),
-      //       },
-      //     ],
-      //   })
-      // } else {
-      //   console.warn(
-      //     `User tried to deleta a class they don't have, should be impossible`
-      //   )
-      // }
       const proceed = await confirm(
         `Are you sure you want to delete ${classId}? All your study records for this class will also be deleted (this can't be reversed).`
       )
@@ -138,9 +118,9 @@ export default function UserClasses() {
           <h1 className="text-gray-900 text-xl leading-tight font-medium mb-2">
             Current Classes
           </h1>
-          <ul className="list-disc">
+          <ul className="list-disc pl-5">
             {userClassIds.map((name: string) => (
-              <li key={name}>
+              <li key={name} className="my-2">
                 <button
                   className="hover:line-through "
                   onClick={() => onClickClass(name)}
@@ -161,16 +141,18 @@ export default function UserClasses() {
             placeholder="Search Here"
             onChange={(e) => closestVals(e.target.value)}
           />
-          {suggestions.map((className: string) => (
-            <div key={className}>
-              <button
-                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                onClick={() => addClassToUser(className)}
-              >
-                {className}
-              </button>
-            </div>
-          ))}
+          <div className="flex flex-col justify-between gap-2 mt-2">
+            {suggestions.map((className: string) => (
+              <div key={className}>
+                <button
+                  className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                  onClick={() => addClassToUser(className)}
+                >
+                  {className}
+                </button>
+              </div>
+            ))}
+          </div>
         </div>
 
         <div>
