@@ -30,11 +30,20 @@ const GraphLayout: FC<GraphLayoutProps> = ({ children, user }) => {
         sx={{
           height: 300,
         }}
+        id="left-box-records"
       >
-        <div className="text-xl font-bold">Class Name: {className}</div>
-        <div className="text-xl font-bold">Start Stamp: {startStamp}</div>
-        <div className="text-xl font-bold">Finish Stamp: {finishStamp}</div>
-        <div className="text-xl font-bold">Duration: {duration}</div>
+        <div className="text-xl font-bold" id="class-name-records">
+          Class Name: {className}
+        </div>
+        <div className="text-xl font-bold" id="start-stamp-records">
+          Start Stamp: {startStamp}
+        </div>
+        <div className="text-xl font-bold" id="finish-stamp-records">
+          Finish Stamp: {finishStamp}
+        </div>
+        <div className="text-xl font-bold" id="duration-records">
+          Duration: {duration}
+        </div>
       </Box>
       <GraphBackground
         user={user}

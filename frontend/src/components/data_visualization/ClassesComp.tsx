@@ -38,8 +38,10 @@ const ClassesComp = () => {
   }
 
   return (
-    <section className="bg-black w-full rounded-lg p-10">
-      <h1 className="text-white font-bold">Class Comparison Visualizer</h1>
+    <section className="bg-black w-full rounded-lg p-10" id="class-bg">
+      <h1 className="text-white font-bold" id="title-class">
+        Class Comparison Visualizer
+      </h1>
       <CompGraphLayout children={classChildren} type={'Class'} />
     </section>
   )

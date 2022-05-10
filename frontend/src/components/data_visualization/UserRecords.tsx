@@ -40,8 +40,13 @@ const UserRecords = () => {
   }
 
   return (
-    <section className="bg-black w-full rounded-lg p-10">
-      <h1 className="text-white font-bold">Record Comparison Visualizer</h1>
+    <section
+      className="bg-black w-full rounded-lg p-10"
+      id="background-records"
+    >
+      <h1 className="text-white font-bold" id="title-records">
+        Record Comparison Visualizer
+      </h1>
       {userName != undefined && (
         <GraphLayout children={children} user={userName} />
       )}

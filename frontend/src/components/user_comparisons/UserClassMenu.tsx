@@ -42,7 +42,11 @@ const UserClassMenu: FC<UserClassMenuProps> = ({ children }) => {
     <div className="flex flex-col w-full">
       {!dropdown && (
         <div className="rounded-full w-full h-20 bg-purple-400 flex flex-row items-center justify-center gap-4 p-4">
-          <button className="text-sm font-bold" onClick={dropdownSwitch}>
+          <button
+            className="text-sm font-bold"
+            onClick={dropdownSwitch}
+            id="add-class-button"
+          >
             Add Classes
           </button>
         </div>
@@ -55,7 +59,11 @@ const UserClassMenu: FC<UserClassMenuProps> = ({ children }) => {
             borderRadius: 10,
           }}
         >
-          <button className="text-sm font-bold" onClick={dropdownSwitch}>
+          <button
+            className="text-sm font-bold"
+            onClick={dropdownSwitch}
+            id="close-button"
+          >
             Close
           </button>
           {children.map((child: UserClassDoc) => {
@@ -70,18 +78,24 @@ const UserClassMenu: FC<UserClassMenuProps> = ({ children }) => {
         </Box>
       )}
       <div className="w-full flex flex-row gap-10">
-        <div className="w-1/3 round-lg bg-white rounded-lg text-xl font-bold p-4">
+        <div
+          className="w-1/3 round-lg bg-white rounded-lg text-xl font-bold p-4"
+          id="user-left-box"
+        >
           {display.map((unit: string) => {
-            return <div>{unit}</div>
+            return <div id={unit}>{unit}</div>
           })}
         </div>
         <Box
           className="w-2/3 bg-white rounded-lg h-full flex flex-col gap-5 items-center p-4"
           sx={{ height: 500 }}
+          id="user-right-box"
         >
           <div className="px-16 py-4 w-full h-full flex items-end flex-row relative">
             <div className="font-bold absolute inset-y-0 left-2 w-10 flex justify-center items-center">
-              <div className="font-bold text-xs -rotate-90">Duration(s)</div>
+              <div className="font-bold text-xs -rotate-90" id="user-y-axis">
+                Duration(s)
+              </div>
             </div>
             <TimeBar
               setDay={setDay}

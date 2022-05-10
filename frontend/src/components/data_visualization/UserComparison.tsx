@@ -41,8 +41,8 @@ const UserComp = () => {
   }
 
   return (
-    <section className="bg-black w-full rounded-lg p-10">
-      <h1 className="text-white font-bold">
+    <section className="bg-black w-full rounded-lg p-10" id="user-bg">
+      <h1 className="text-white font-bold" id="user-title">
         Compare Time on Classes Visualizer
       </h1>
       <UserClassMenu children={userClassChildren} />
