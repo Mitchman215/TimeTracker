@@ -41,7 +41,7 @@ const UserClassMenu: FC<UserClassMenuProps> = ({ children }) => {
   return (
     <div className="flex flex-col w-full">
       {!dropdown && (
-        <div className="rounded-full w-full h-20 bg-purple-400 flex flex-row items-center justify-center gap-4 p-4">
+        <div className="rounded-full w-full h-20 bg-purple-400 flex flex-row items-center justify-center gap-4 p-4 my-3">
           <button
             className="text-sm font-bold"
             onClick={dropdownSwitch}
@@ -53,7 +53,7 @@ const UserClassMenu: FC<UserClassMenuProps> = ({ children }) => {
       )}
       {dropdown && (
         <Box
-          className="w-full bg-purple-400 flex flex-col items-center gap-2 p-4"
+          className="w-full bg-purple-400 flex flex-col items-center gap-2 p-4 my-3"
           sx={{
             height: 200,
             borderRadius: 10,
@@ -69,6 +69,7 @@ const UserClassMenu: FC<UserClassMenuProps> = ({ children }) => {
           {children.map((child: UserClassDoc) => {
             return (
               <DropDownBar
+                key={child.name}
                 child={child}
                 children={displayChildren}
                 setDisplay={setDisplayChildren}
@@ -83,7 +84,11 @@ const UserClassMenu: FC<UserClassMenuProps> = ({ children }) => {
           id="user-left-box"
         >
           {display.map((unit: string) => {
-            return <div id={unit}>{unit}</div>
+            return (
+              <div key={unit} id={unit}>
+                {unit}
+              </div>
+            )
           })}
         </div>
         <Box
@@ -108,6 +113,7 @@ const UserClassMenu: FC<UserClassMenuProps> = ({ children }) => {
                 return (
                   <UserBars
                     child={child}
+                    key={child.name}
                     day={day}
                     week={week}
                     month={month}

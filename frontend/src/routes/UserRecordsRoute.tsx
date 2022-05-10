@@ -1,5 +1,5 @@
 import { DocumentData, QueryDocumentSnapshot } from 'firebase/firestore'
-import { useContext, useEffect, useState } from 'react'
+import { useContext, useEffect, useRef, useState } from 'react'
 import { useCollection } from 'react-firebase-hooks/firestore'
 import Card from '../components/Card'
 import UserRecords from '../components/data_visualization/UserRecords'
@@ -20,12 +20,15 @@ export default function UserRecordsRoute() {
     setCurClass(classes?.docs.filter((a_class) => a_class.id == id)[0])
   }
 
+  const initializeCurClass: React.MutableRefObject<boolean> = useRef(false)
+
   useEffect(() => {
-    if (!classes) {
+    if (!classes || initializeCurClass.current) {
       return
     }
 
     setCurClass(classes.docs[0])
+    initializeCurClass.current = true
   }, [classes])
 
   return (

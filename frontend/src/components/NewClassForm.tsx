@@ -42,6 +42,10 @@ function NewClassForm() {
           message: `Successfully created a class with id "${result.val}"`,
           isError: false,
         })
+
+        setNewClassDepartment('')
+        setNewClassNum('')
+        setNewClassName('')
       } else {
         // adding new class failed
         console.log({ error: result.val })
