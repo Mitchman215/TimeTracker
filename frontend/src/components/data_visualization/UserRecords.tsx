@@ -32,6 +32,7 @@ const UserRecords = () => {
     for (let i = 0; i < docs?.length; i++) {
       try {
         const child: RecordClassDoc = docs[i].data() as RecordClassDoc
+        child.uid = docs[i].id
         children.push(child)
       } catch (error) {
         console.log(error)

@@ -36,6 +36,7 @@ function TimeTracker() {
 
   // track currently selected class
   const [curClass, setClass] = useState<string>()
+
   // once classIds is loaded, selects the first class automatically
   useEffect(() => {
     if (classIds && curClass === undefined) {
