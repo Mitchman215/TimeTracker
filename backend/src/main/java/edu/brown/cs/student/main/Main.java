@@ -1,10 +1,13 @@
 package edu.brown.cs.student.main;
 
 
+import edu.brown.cs.student.commands.AddDepartments;
 import edu.brown.cs.student.repl.Repl;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
 import spark.Spark;
+
+import java.io.IOException;
 
 
 /**
@@ -20,7 +23,7 @@ public final class Main {
    *
    * @param args An array of command line arguments
    */
-  public static void main(String[] args) {
+  public static void main(String[] args) throws IOException {
     new Main(args).run();
   }
 
@@ -30,7 +33,7 @@ public final class Main {
     this.args = args;
   }
 
-  private void run() {
+  private void run() throws IOException {
     // set up parsing of command line flags
     OptionParser parser = new OptionParser();
 
@@ -47,6 +50,7 @@ public final class Main {
     }
 
     Repl repl = new Repl();
+    repl.addCommand(new AddDepartments());
     repl.start();
   }
 
