@@ -2,7 +2,7 @@ import { query } from 'firebase/firestore'
 import { useContext, useEffect, useState } from 'react'
 import { useCollectionData } from 'react-firebase-hooks/firestore'
 import UserContext from '../../models/UserContext'
-import ErrorPage from './ErrorPage'
+import ErrorPage from '../ErrorPage'
 import Pomodoro from './pomodoro/Pomodoro'
 import StopWatch from './StopWatch'
 
