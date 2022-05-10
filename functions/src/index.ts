@@ -389,9 +389,6 @@ exports.updateWeeklyAvgs = functions.pubsub
       departmentClassWeekAvg =
         departmentClassWeekAvg / departmentClassesSnap.size || 0;
 
-      console.log(classesWeeklyTotals);
-      console.log(departmentClassesSnap.size);
-
       // update the average total class time per user per class
       departmentDocData.total_time = departmentDocData.total_time || 0;
       departmentDocData.total_time += departmentClassWeekAvg;
