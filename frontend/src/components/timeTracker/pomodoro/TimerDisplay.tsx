@@ -1,3 +1,5 @@
+import { Stage as PomStage, Stage } from './Pomodoro'
+
 export enum TimerState {
   NotStarted,
   Paused,
@@ -13,12 +15,13 @@ interface Timer {
   start: () => void
   pause: () => void
   resume: () => void
-  restart: () => void
+  finish: () => void
+  stop: () => void
 }
 
 interface TimerDisplayProp {
   timer: Timer
-  displayBgColor?: string // tailwind-css color name that dictates the color behind the display time
+  pomStage?: PomStage // different color based on pom stage
 }
 
 // formats a number representing a time correctly
@@ -31,17 +34,38 @@ export function formatTime(time: number): string {
 }
 
 // stateless component that displays a timer object
-export default function TimerDisplay(props: TimerDisplayProp) {
-  const timerDisplayString = `${formatTime(props.timer.hours)}:${formatTime(
-    props.timer.minutes
-  )}:${formatTime(props.timer.seconds)}`
+export default function TimerDisplay({ timer, pomStage }: TimerDisplayProp) {
+  const timerDisplayString = `${formatTime(timer.hours)}:${formatTime(
+    timer.minutes
+  )}:${formatTime(timer.seconds)}`
+
+  let timeDisplay: JSX.Element
+  switch (pomStage) {
+    case Stage.ShortBreak:
+      timeDisplay = (
+        <div className="bg-blue-medium time-display">{timerDisplayString}</div>
+      )
+      break
+    case Stage.LongBreak:
+      timeDisplay = (
+        <div className="bg-blue-dark time-display">{timerDisplayString}</div>
+      )
+      break
+    default:
+      timeDisplay = (
+        <div className="bg-orange-medium time-display">
+          {timerDisplayString}
+        </div>
+      )
+      break
+  }
 
   let startPauseResumeButton: JSX.Element
-  switch (props.timer.state) {
+  switch (timer.state) {
     case TimerState.NotStarted:
       // show start button
       startPauseResumeButton = (
-        <button className="btn-purple" onClick={props.timer.start}>
+        <button className="btn-purple" onClick={timer.start}>
           Start
         </button>
       )
@@ -49,7 +73,7 @@ export default function TimerDisplay(props: TimerDisplayProp) {
     case TimerState.Running:
       // show pause button
       startPauseResumeButton = (
-        <button className="btn-purple" onClick={props.timer.pause}>
+        <button className="btn-purple" onClick={timer.pause}>
           Pause
         </button>
       )
@@ -57,7 +81,7 @@ export default function TimerDisplay(props: TimerDisplayProp) {
     case TimerState.Paused:
       // show resume button
       startPauseResumeButton = (
-        <button className="btn-purple" onClick={props.timer.resume}>
+        <button className="btn-purple" onClick={timer.resume}>
           Resume
         </button>
       )
@@ -68,26 +92,46 @@ export default function TimerDisplay(props: TimerDisplayProp) {
       break
   }
 
-  const restartButton = (
+  const finishButton = (
     <button
-      hidden={props.timer.state === TimerState.NotStarted}
-      onClick={props.timer.restart}
+      hidden={timer.state === TimerState.NotStarted}
+      onClick={timer.finish}
       className="btn-purple"
     >
-      Restart
+      Finish Early
+    </button>
+  )
+
+  async function onStopClick() {
+    // confirmation dialog to make sure user wants to stop
+    timer.pause()
+    const stop = await confirm(
+      'Stopping the Pomodoro Timer will lose all unfinished study progress.'
+    )
+    if (stop) {
+      timer.stop()
+    } else {
+      timer.resume()
+    }
+  }
+
+  const stopButton = (
+    <button
+      hidden={timer.state === TimerState.NotStarted}
+      onClick={onStopClick}
+      className="btn-purple"
+    >
+      Stop
     </button>
   )
 
   return (
-    <div className="bg-orange-light flex flex-col items-center p-4 rounded-md">
-      <div
-        className={`bg-orange-medium text-8xl p-4 m-2 rounded-md shadow-md bg-${props.displayBgColor}`}
-      >
-        {timerDisplayString}
-      </div>
+    <div className="bg-orange-light flex flex-col items-center p-2 mb-2 rounded-md">
+      {timeDisplay}
       <span>
         {startPauseResumeButton}
-        {restartButton}
+        {finishButton}
+        {stopButton}
       </span>
     </div>
   )

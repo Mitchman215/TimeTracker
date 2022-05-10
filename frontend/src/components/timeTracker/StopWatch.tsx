@@ -27,7 +27,6 @@ function StopWatch({ currentClass }: StopWatchProps) {
 
   //when stopwatch starts
   function startTimer() {
-    console.log(currentClass)
     setStart(new Date())
     setStarted(true)
   }
@@ -37,15 +36,27 @@ function StopWatch({ currentClass }: StopWatchProps) {
   if (!started) {
     // start button showed
     startPauseResumeButton = (
-      <button onClickCapture={start} onClick={startTimer}>
+      <button
+        className="btn-purple"
+        onClickCapture={start}
+        onClick={startTimer}
+      >
         Start
       </button>
     )
   } else if (isRunning) {
     // pause button showed
-    startPauseResumeButton = <button onClick={pause}>Pause</button>
+    startPauseResumeButton = (
+      <button className="btn-purple" onClick={pause}>
+        Pause
+      </button>
+    )
   } else {
-    startPauseResumeButton = <button onClick={start}>Resume</button>
+    startPauseResumeButton = (
+      <button className="btn-purple" onClick={start}>
+        Resume
+      </button>
+    )
   }
 
   //when log study time is pressed
@@ -66,18 +77,16 @@ function StopWatch({ currentClass }: StopWatchProps) {
     `${formatTime(hours)}:${formatTime(minutes)}:${formatTime(seconds)}`
 
   return (
-    <div className="bg-orange-light flex flex-col items-center p-4 rounded-md">
-      <div className="bg-orange-medium text-8xl p-4 m-2 rounded-md shadow-md">
-        {timerDisplayString}
-      </div>
-      <span className="btn-purple">{startPauseResumeButton}</span>
-      &nbsp;
-      <span className="btn-purple">
-        {<button onClick={logRecord}>Log Study Time</button>}
-      </span>
-      &nbsp;
-      <span className="btn-purple">
-        {<button onClick={handleReset}>Reset</button>}
+    <div className="bg-orange-light flex flex-col items-center p-2 mb-2 rounded-md">
+      <div className="bg-orange-medium time-display">{timerDisplayString}</div>
+      <span>
+        {startPauseResumeButton}
+        <button className="btn-purple" onClick={logRecord}>
+          Log Study Time
+        </button>
+        <button className="btn-purple" onClick={handleReset}>
+          Reset
+        </button>
       </span>
     </div>
   )

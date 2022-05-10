@@ -32,6 +32,7 @@ const UserRecords = () => {
     for (let i = 0; i < docs?.length; i++) {
       try {
         const child: RecordClassDoc = docs[i].data() as RecordClassDoc
+        child.uid = docs[i].id
         children.push(child)
       } catch (error) {
         console.log(error)
@@ -40,8 +41,13 @@ const UserRecords = () => {
   }
 
   return (
-    <section className="bg-black w-full rounded-lg p-10">
-      <h1 className="text-white font-bold">Record Comparison Visualizer</h1>
+    <section
+      className="bg-black w-full rounded-lg p-10"
+      id="background-records"
+    >
+      <h1 className="text-white font-bold" id="title-records">
+        Record Comparison Visualizer
+      </h1>
       {userName != undefined && (
         <GraphLayout children={children} user={userName} />
       )}

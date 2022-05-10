@@ -1,9 +1,10 @@
 import {
+  doc,
   DocumentData,
-  DocumentReference,
   QueryDocumentSnapshot,
   SnapshotOptions,
 } from 'firebase/firestore'
+import { db } from '../firebase'
 
 interface DayAverage {
   average: number
@@ -22,24 +23,25 @@ interface MonthAverage {
 }
 
 // Represents a class from a users' "classes" collection, mirrors firestore db
-export default class Class {
+// Note: doesn't have 'class' field because it is redundant, can just do
+// `doc(db, 'classes', <classId>)`
+export default class UserClass {
   constructor(
     readonly id: string,
     readonly name: string,
-    readonly ref: DocumentReference,
-    readonly dailyAverages: DayAverage[],
-    readonly weeklyAverages: WeekAverage[],
-    readonly monthlyAverages: MonthAverage[]
+    readonly dailyAverages: DayAverage[] = [],
+    readonly weeklyAverages: WeekAverage[] = [],
+    readonly monthlyAverages: MonthAverage[] = []
   ) {}
 }
 
 // Firestore data converter for Class
 export const classConverter = {
-  toFirestore(theClass: Class): DocumentData {
+  toFirestore(theClass: UserClass): DocumentData {
     return {
       id: theClass.id,
       name: theClass.name,
-      class: theClass.ref,
+      class: doc(db, 'classes', theClass.id),
       daily_averages: theClass.dailyAverages,
       weekly_averages: theClass.weeklyAverages,
       monthly_averages: theClass.monthlyAverages,
@@ -48,12 +50,11 @@ export const classConverter = {
   fromFirestore(
     snapshot: QueryDocumentSnapshot,
     options: SnapshotOptions
-  ): Class {
+  ): UserClass {
     const data = snapshot.data(options)
-    return new Class(
+    return new UserClass(
       snapshot.id,
       data.name,
-      data.class,
       data.daily_averages,
       data.weekly_averages,
       data.monthly_averages

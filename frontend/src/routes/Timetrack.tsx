@@ -2,7 +2,7 @@ import TimeTracker from '../components/timeTracker/TimeTracker'
 
 export default function Timetrack() {
   return (
-    <main>
+    <main className="flex justify-center">
       <TimeTracker />
     </main>
   )

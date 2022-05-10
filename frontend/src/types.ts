@@ -26,6 +26,7 @@ type UserClassDoc = {
 }
 
 type RecordClassDoc = {
+  uid: string
   class: DocumentReference<DocumentData>
   class_name: string
   duration: number

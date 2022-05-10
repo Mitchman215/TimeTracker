@@ -50,6 +50,7 @@ const TimeBar: FC<TimeBarProps> = ({
             setMonth(false)
             setDisplay([`Class:`, `Average:`, `Day:`])
           }}
+          id="day-button"
         >
           D
         </button>
@@ -69,6 +70,7 @@ const TimeBar: FC<TimeBarProps> = ({
             setMonth(false)
             setDisplay([`Class:`, `Average:`, `Start:`, `Finish:`])
           }}
+          id="week-button"
         >
           W
         </button>
@@ -88,6 +90,7 @@ const TimeBar: FC<TimeBarProps> = ({
             setMonth(true)
             setDisplay([`Class:`, `Average:`, `Month:`])
           }}
+          id="month-button"
         >
           M
         </button>
@@ -103,6 +106,7 @@ const TimeBar: FC<TimeBarProps> = ({
           setMonth(false)
           setDisplay([])
         }}
+        id="clear-button"
       >
         X
       </button>

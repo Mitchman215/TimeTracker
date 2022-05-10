@@ -12,7 +12,7 @@ function isValidDepartment(code: string): boolean {
 
 /**
  * Determines if the specified string is a valid course number
- * with format "XXXX[L]" where X is a digit and [L] is an optional letter
+ * with format "XXXX[L]" where X are digits and [L] is an optional letter
  * @param num the course number as a string
  * @returns true if `num` is a valid course number, false otherwise
  */

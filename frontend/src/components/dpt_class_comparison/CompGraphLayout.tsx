@@ -42,13 +42,20 @@ const CompGraphLayout: FC<CompGraphLayoutProps> = ({ children, type }) => {
           sx={{
             height: 500,
           }}
+          id="left-box-dpt-class"
         >
-          <div className="text-xl font-bold">
+          <div className="text-xl font-bold" id="name-dpt-class">
             {type} Name: {name}
           </div>
-          <div className="text-xl font-bold">Daily Average: {dailyAvg}</div>
-          <div className="text-xl font-bold">Weekly Average: {weeklyAvg}</div>
-          <div className="text-xl font-bold">Total Time: {totalTime}</div>
+          <div className="text-xl font-bold" id="daily-avg-dpt-class">
+            Daily Average: {dailyAvg}
+          </div>
+          <div className="text-xl font-bold" id="wkly-avg-dpt-class">
+            Weekly Average: {weeklyAvg}
+          </div>
+          <div className="text-xl font-bold" id="total-dpt-class">
+            Total Time: {totalTime}
+          </div>
         </Box>
       )}
       {modal && (
@@ -58,7 +65,10 @@ const CompGraphLayout: FC<CompGraphLayoutProps> = ({ children, type }) => {
             height: 500,
           }}
         >
-          <div className="flex text-lg font-bold w-full p-4">
+          <div
+            className="flex text-lg font-bold w-full p-4"
+            id="modal-tital-dpt-class"
+          >
             Select {type} to Compare
           </div>
           <div className="flex flex-col p-4 w-full gap-2">
@@ -76,6 +86,7 @@ const CompGraphLayout: FC<CompGraphLayoutProps> = ({ children, type }) => {
           <button
             className="w-6 h-6 bg-black absolute right-3 top-3 rounded-full text-white"
             onClick={closeModal}
+            id="dpt-class-modal"
           >
             -
           </button>
