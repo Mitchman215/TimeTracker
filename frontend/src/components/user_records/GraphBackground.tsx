@@ -50,6 +50,7 @@ const GraphBackground: FC<GraphBackgroundProps> = ({
           {children.map((child: RecordClassDoc) => {
             return (
               <Bars
+                key={child.uid}
                 size={child.duration / 100}
                 className={child.class_name}
                 startStamp={child.start.toDate().toLocaleString()}

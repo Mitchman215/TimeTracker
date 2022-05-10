@@ -2,7 +2,6 @@ import { Navigate, Route, Routes } from 'react-router-dom'
 import Nav from './components/Nav'
 import Home from './routes/Home'
 import Timetrack from './routes/Timetrack'
-import Class from './routes/Class'
 import ClassRecords from './routes/ClassRecords'
 import NotFound from './routes/NotFound'
 import { useAuthState } from 'react-firebase-hooks/auth'
@@ -37,7 +36,6 @@ export default function App() {
               <Route path="/" element={<Home />} />
               <Route path="timetracker" element={<Timetrack />} />
               <Route path="auth" element={<Navigate replace to="/" />} />
-              <Route path="class" element={<Class />} />
               <Route path="records" element={<UserRecordsRoute />} />
               <Route path="departments" element={<DptCompRoute />} />
               <Route path="classes" element={<ClassesCompRoute />} />
