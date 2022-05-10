@@ -2,7 +2,6 @@ import {
   collection,
   DocumentData,
   DocumentReference,
-  orderBy,
   query,
   where,
 } from 'firebase/firestore'
@@ -18,7 +17,6 @@ type RecordsProps = {
 }
 
 export default function Records({ classDoc, userId }: RecordsProps) {
-  console.log(classDoc)
   const recordsRef = collection(db, 'users', userId, 'records')
   const [snapshot, loading, error] = useCollection(
     query(recordsRef, where('class', '==', classDoc))

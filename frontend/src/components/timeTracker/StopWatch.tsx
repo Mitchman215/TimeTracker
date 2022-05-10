@@ -27,7 +27,6 @@ function StopWatch({ currentClass }: StopWatchProps) {
 
   //when stopwatch starts
   function startTimer() {
-    console.log(currentClass)
     setStart(new Date())
     setStarted(true)
   }
