@@ -12,7 +12,7 @@ import {
   useCollection,
   useCollectionData,
 } from 'react-firebase-hooks/firestore'
-import { useContext, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import leven from 'leven'
 import UserContext from '../models/UserContext'
 import NewClassForm from './NewClassForm'
@@ -41,7 +41,7 @@ export default function UserClasses() {
   const classDocs: QueryDocumentSnapshot<DocumentData>[] =
     allClassesQuery !== undefined ? allClassesQuery.docs : []
   const allClassesMap: Map<string, string> = new Map()
-  classDocs.forEach((d) => allClassesMap.set(d.id, d.data.name))
+  classDocs.forEach((d) => allClassesMap.set(d.id, d.data().name))
 
   // state variable for suggestions while searching
   const [suggestions, setSuggestions] = useState<string[]>([])
