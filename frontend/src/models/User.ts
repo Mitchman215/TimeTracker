@@ -11,11 +11,12 @@ import {
   setDoc,
   updateDoc,
   getDoc,
+  deleteDoc,
 } from 'firebase/firestore'
 import { db } from '../firebase'
 import { defaultPomSettings, PomSettings } from './PomSettings'
 import { User as AuthUser } from 'firebase/auth'
-import Class, { classConverter } from './Class'
+import UserClass, { classConverter } from './UserClass'
 
 // Represents a user's data. Mirrors user data in firestore
 export default class User {
@@ -23,7 +24,7 @@ export default class User {
 
   readonly classesRef: CollectionReference<DocumentData>
 
-  readonly typedClassesRef: CollectionReference<Class>
+  readonly typedClassesRef: CollectionReference<UserClass>
 
   constructor(
     readonly uid: string,
@@ -48,7 +49,7 @@ export default class User {
     console.log(`Logging new record for the class "${classId}`)
     console.log({ classId, startTime, timeStudied, finishTime })
     await addDoc(this.recordsRef, {
-      // class: doc(db, 'classes', ref),
+      class: doc(db, 'classes', classId),
       class_name: classId,
       start: startTime,
       finish: finishTime,
@@ -67,6 +68,13 @@ export default class User {
 
   async enrollInExistingClass() {
     // todo: implement maybe
+  }
+
+  // delete class from user's classes subcollection
+  async deleteClass(classId: string) {
+    console.log(`Deleting ${classId} from user's classes`)
+    return deleteDoc(doc(db, this.classesRef.path, classId))
+    // note: cloud function should deal with deleting all the user's records for that class
   }
 
   // saves new settings to firestore

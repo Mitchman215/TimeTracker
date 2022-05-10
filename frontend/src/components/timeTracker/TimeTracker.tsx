@@ -2,7 +2,7 @@ import { query } from 'firebase/firestore'
 import { useContext, useEffect, useState } from 'react'
 import { useCollectionData } from 'react-firebase-hooks/firestore'
 import UserContext from '../../models/UserContext'
-import ErrorPage from './ErrorPage'
+import ErrorPage from '../ErrorPage'
 import Pomodoro from './pomodoro/Pomodoro'
 import StopWatch from './StopWatch'
 
@@ -79,7 +79,10 @@ function TimeTracker() {
 
   // the dropdown for selecting a time tracking mode
   const modeSelector = (
-    <select className="ml-auto" onChange={handleModeSelect}>
+    <select
+      className="text-2xl p-1 rounded-sm font-semibold shadow-md"
+      onChange={handleModeSelect}
+    >
       {optionFor(Mode.Stopwatch)}
       {optionFor(Mode.PomTimer)}
     </select>
@@ -131,13 +134,10 @@ function TimeTracker() {
   )
 
   return (
-    <div className="flex flex-col justify-center items-center bg-orange-light p-4">
-      <span className="bg-blue-medium flex justify-center items-center p-1 rounded-sm">
-        <h2 className="text-3xl mr-2">{curMode}</h2>
-        {modeSelector}
-      </span>
+    <div className="flex flex-col justify-center items-center bg-orange-light px-2 py-8 max-w-4xl grow">
+      {modeSelector}
       {selectedTracker}
-      <div className="flex">
+      <div className="flex mt-2">
         {classSelector}
         <input
           type="text"

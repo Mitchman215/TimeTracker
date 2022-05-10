@@ -1,5 +1,5 @@
-import Card from '../components/Card'
+import ErrorPage from '../components/ErrorPage'
 
 export default function NotFound() {
-  return <Card>Page Not Found</Card>
+  return <ErrorPage error="Page Not Found" />
 }
