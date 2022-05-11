@@ -3,6 +3,7 @@ package edu.brown.cs.student.commands;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.cloud.firestore.Firestore;
 import com.google.cloud.firestore.SetOptions;
+import com.google.common.collect.Sets;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
 import com.google.firebase.cloud.FirestoreClient;
@@ -18,6 +19,8 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.Duration;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -38,6 +41,8 @@ public class AddDepartments implements Command {
   private static final String CAB_URL = "https://cab.brown.edu/";
   
   private static final String PATH_TO_KEY = "secret/time-tracker-669e3-8ec92c95370d.json";
+
+  private static final String DEPT_META_DOC_PATH = "departments/_meta";
   
   private final Firestore db;
   
@@ -45,7 +50,7 @@ public class AddDepartments implements Command {
     WebDriverManager.chromedriver().setup();
     InputStream serviceAccount = new FileInputStream(PATH_TO_KEY);
     GoogleCredentials credentials = GoogleCredentials.fromStream(serviceAccount);
-    FirebaseOptions options = new FirebaseOptions.Builder()
+    FirebaseOptions options = FirebaseOptions.builder()
           .setCredentials(credentials)
           .build();
     FirebaseApp.initializeApp(options);
@@ -73,16 +78,18 @@ public class AddDepartments implements Command {
     Select subjectsDropdown = new Select(driver.findElement(By.id("crit-subject")));
     List<WebElement> allSubjectOptions = subjectsDropdown.getOptions();
     List<String> allSubjects = allSubjectOptions.stream()
-        .map((elt) -> elt.getText())
+        .map(elt -> elt.getText())
         .collect(Collectors.toList());
 
-    List<String> codesAdded = new LinkedList<>();
+    Set<String> newCodes = new HashSet<>();
+    Set<String> oldCodes = new HashSet<>();
     try {
       // get all subjects already in firestore
       Set<String> subjectCodesInDb = db.collection("departments").get()
             .get().getDocuments().stream()
-            .map((doc) -> doc.getId())
+            .map(doc -> doc.getId())
             .collect(Collectors.toSet());
+
 
       // save new subjects to firestore
       allSubjects
@@ -94,10 +101,10 @@ public class AddDepartments implements Command {
             }
             String name = split[0];
             String code = split[1].substring(0, split[1].length() - 1);
-            System.out.println(name + ": " + code);
+            // System.out.println(name + ": " + code);
             // make sure subject is not already in firestore
             if (!subjectCodesInDb.contains(code)) {
-              codesAdded.add(code);
+              newCodes.add(code);
               Map<String, String> docData = Map.of(
                     "name", name,
                     "daily_average", "0",
@@ -106,15 +113,22 @@ public class AddDepartments implements Command {
               );
               // send new doc to firestore
               db.collection("departments").document(code).set(docData, SetOptions.merge());
+            } else {
+              oldCodes.add(code);
             }
           });
+
+      // update the metadata document
+      List<String> allCodes = List.copyOf(Sets.union(newCodes, oldCodes));
+      db.document(DEPT_META_DOC_PATH).set(Map.of("all_codes", allCodes), SetOptions.merge());
     } catch (ExecutionException | InterruptedException e) {
       e.printStackTrace();
       return "ERROR: " + e;
     }
 
     driver.quit();
-    return "Added " + codesAdded.size() + " subjects: " + codesAdded;
+    return "Added " + newCodes.size() + " subjects: " + newCodes + ".\n"
+          + oldCodes.size() + " subjects were already in the db: " + oldCodes;
   }
 
   @Override
