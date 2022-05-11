@@ -21,7 +21,7 @@ export enum Stage {
 
 const defaultNumPoms = 2 // after this many work sessions are completed, take long break
 
-function Pomodoro(props: PomodoroProp) {
+function Pomodoro({ user, currentClass, currentAssignment }: PomodoroProp) {
   const [curStage, setStage] = useState<Stage>(Stage.NotStarted)
   const [startTime, setStartTime] = useState<Date>()
   const [pomsFinished, setPomsFinished] = useState(0)
@@ -40,7 +40,7 @@ function Pomodoro(props: PomodoroProp) {
           start = startTime
         }
         // log the study session in firebase
-        props.user.logRecord(props.currentClass, start, studyTime)
+        user.logRecord(currentClass, start, studyTime, currentAssignment)
         if (pomsFinished + 1 >= defaultNumPoms) {
           // user has finished set of pomodoros, take a long break
           setStage(Stage.LongBreak)
@@ -74,19 +74,19 @@ function Pomodoro(props: PomodoroProp) {
   switch (curStage) {
     case Stage.NotStarted:
       titleString = `Click the start button to begin`
-      duration = props.user.pomSettings.workDuration
+      duration = user.pomSettings.workDuration
       break
     case Stage.Work:
-      titleString = `Time to grind. Working on ${props.currentClass}`
-      duration = props.user.pomSettings.workDuration
+      titleString = `Time to grind. Working on ${currentClass}`
+      duration = user.pomSettings.workDuration
       break
     case Stage.ShortBreak:
       titleString = 'Nice! Take a short break'
-      duration = props.user.pomSettings.shortBreakDuration
+      duration = user.pomSettings.shortBreakDuration
       break
     case Stage.LongBreak:
       titleString = 'Good job! Take a long break, you deserve it'
-      duration = props.user.pomSettings.longBreakDuration
+      duration = user.pomSettings.longBreakDuration
   }
   const onTimerFinish = () => finishStage(curStage, duration)
 
@@ -107,7 +107,7 @@ function Pomodoro(props: PomodoroProp) {
   useEffect(() => {
     timerHook.restart(getExpireTime(), curStage !== Stage.NotStarted)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [curStage, props.user])
+  }, [curStage, user])
 
   // returns the current timer state
   function getTimerState(): TimerState {
@@ -170,7 +170,7 @@ function Pomodoro(props: PomodoroProp) {
       <span className="flex flex-row items-center bg-orange-light text-white font-semibold">
         <h2 className="px-2 text-2xl mt-2">{titleString}</h2>
         <h3 className="px-2 text-xl text-neutral-100">#Poms: {pomsFinished}</h3>
-        {curStage === Stage.NotStarted && <Settings user={props.user} />}
+        {curStage === Stage.NotStarted && <Settings user={user} />}
       </span>
       <TimerDisplay timer={timer} pomStage={curStage} />
     </div>
