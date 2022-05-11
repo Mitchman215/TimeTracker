@@ -71,7 +71,7 @@ const CompGraphLayout: FC<CompGraphLayoutProps> = ({ children, type }) => {
           >
             Select {type} to Compare
           </div>
-          <div className="flex flex-col p-4 w-full gap-2">
+          <div className="flex flex-col p-4 w-full gap-2 overflow-y-scroll">
             {children.map((child: DptClassDoc) => {
               return (
                 <ModalBar
