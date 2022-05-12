@@ -40,6 +40,7 @@ function StopWatch({ currentClass, currentAssignment }: StopWatchProps) {
         className="btn-purple"
         onClickCapture={start}
         onClick={startTimer}
+        id="start-button"
       >
         Start
       </button>
@@ -47,13 +48,13 @@ function StopWatch({ currentClass, currentAssignment }: StopWatchProps) {
   } else if (isRunning) {
     // pause button showed
     startPauseResumeButton = (
-      <button className="btn-purple" onClick={pause}>
+      <button className="btn-purple" onClick={pause} id="pause-button">
         Pause
       </button>
     )
   } else {
     startPauseResumeButton = (
-      <button className="btn-purple" onClick={start}>
+      <button className="btn-purple" onClick={start} id="resume-button">
         Resume
       </button>
     )
@@ -77,7 +78,9 @@ function StopWatch({ currentClass, currentAssignment }: StopWatchProps) {
 
   return (
     <div className="bg-orange-light flex flex-col items-center p-2 mb-2 rounded-md">
-      <div className="bg-orange-medium time-display">{timerDisplayString}</div>
+      <div className="bg-orange-medium time-display" id="time">
+        {timerDisplayString}
+      </div>
       <span>
         {startPauseResumeButton}
         <button hidden={!started} className="btn-purple" onClick={logRecord}>

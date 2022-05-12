@@ -38,7 +38,7 @@ public class PomTimerTests {
     Thread.sleep(1000);
 
     // switch to Pomodoro timer
-    WebElement modeDropdown = driver.findElement(By.)
+    // WebElement modeDropdown = driver.findElement(By.)
     assertTrue(true);
   }
 }
