@@ -116,6 +116,8 @@ public class UserClassesTests {
         newClassButton.click();
 
         Thread.sleep(2000);
+        Thread.sleep(2000);
+
 
         // check if an error message pops up after searching for an existing class
         Boolean errorMessagePresent = driver.findElements(By.id("error-adding-class")).size() > 0;

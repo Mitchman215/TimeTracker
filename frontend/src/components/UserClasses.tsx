@@ -124,6 +124,7 @@ export default function UserClasses() {
                 <button
                   className="hover:line-through "
                   onClick={() => onClickClass(name)}
+                  id={name + ' class'}
                 >
                   {name}
                 </button>
@@ -140,6 +141,7 @@ export default function UserClasses() {
             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             placeholder="Search Here"
             onChange={(e) => closestVals(e.target.value)}
+            id="existing-class"
           />
           <div className="flex flex-col justify-between gap-2 mt-2">
             {suggestions.map((className: string) => (
@@ -147,6 +149,7 @@ export default function UserClasses() {
                 <button
                   className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
                   onClick={() => addClassToUser(className)}
+                  id={className + ' suggestion'}
                 >
                   {className}
                 </button>

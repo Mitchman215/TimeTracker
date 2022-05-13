@@ -19,9 +19,13 @@ function NewClassForm() {
     isError: false,
   })
   const statusDisplay = newClassStatus.isError ? (
-    <p className="text-red-error">{newClassStatus.message}</p>
+    <p className="text-red-error" id="error-adding-class">
+      {newClassStatus.message}
+    </p>
   ) : (
-    <p className="text-green-success">{newClassStatus.message}</p>
+    <p className="text-green-success" id="success-adding-class">
+      {newClassStatus.message}
+    </p>
   )
 
   // handles when the user clicks the button to add a new class
@@ -71,6 +75,7 @@ function NewClassForm() {
             value={newClassDepartment}
             placeholder="Ex. CSCI"
             onChange={(e) => setNewClassDepartment(e.target.value)}
+            id="department-input"
           />
         </label>
         <label className="flex flex-col underline">
@@ -80,6 +85,7 @@ function NewClassForm() {
             value={newClassNum}
             placeholder="Ex. 0320"
             onChange={(e) => setNewClassNum(e.target.value)}
+            id="number-input"
           />
         </label>
       </span>
@@ -89,9 +95,14 @@ function NewClassForm() {
           value={newClassName}
           placeholder="Ex. Introduction to Software Engineering"
           onChange={(e) => setNewClassName(e.target.value)}
+          id="class-input"
         />
       </label>
-      <button className="btn-blue my-2" onClick={addClass}>
+      <button
+        className="btn-blue my-2"
+        onClick={addClass}
+        id="submit-new-class"
+      >
         Submit
       </button>
       {statusDisplay}
