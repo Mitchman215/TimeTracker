@@ -26,7 +26,7 @@ public class DataVisualizerTests {
   
       // Defining chromedriver and loading html file
       ChromeOptions options = new ChromeOptions();
-      options.addArguments("user-data-dir=C:/Users/nicky/AppData/Local/Google/Chrome/User Data/");
+      options.addArguments("user-data-dir=C:/Users/desim/AppData/Local/Google/Chrome/User Data", "--profile-directory=Profile 1");
       this.driver = new ChromeDriver(options); 
     }
 
