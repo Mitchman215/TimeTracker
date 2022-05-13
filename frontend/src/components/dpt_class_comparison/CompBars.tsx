@@ -45,9 +45,9 @@ const CompBars: FC<CompBarsProps> = ({
       className="flex flex-col items-end w-full"
       onMouseEnter={() => {
         setName(name)
-        setDailyAvg(dailyAvg.toString())
-        setWeeklyAvg(weeklyAvg.toString())
-        setTotalTime(totalTime.toString())
+        setDailyAvg((dailyAvg / 3600).toString() + ' hours')
+        setWeeklyAvg((weeklyAvg / 3600).toString() + ' hours')
+        setTotalTime((totalTime / 3600).toString() + ' hours')
         setBGT('#A3A3A3')
         setBGM('#525252')
         setBGB('#171717')

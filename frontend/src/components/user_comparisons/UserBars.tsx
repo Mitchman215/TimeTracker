@@ -50,7 +50,7 @@ const UserBars: FC<UserBarsProps> = ({
                     onMouseEnter={() => {
                       setDisplay([
                         `Class: ${child.name}`,
-                        `Average: ${unit.average}`,
+                        `Average: ${unit.average / 3600} hours`,
                         `Day: ${unit.day.toDate().toLocaleDateString()}`,
                       ])
                     }}
@@ -79,7 +79,7 @@ const UserBars: FC<UserBarsProps> = ({
                     onMouseEnter={() => {
                       setDisplay([
                         `Class: ${child.name}`,
-                        `Average: ${unit.average}`,
+                        `Average: ${unit.average / 3600} Hours`,
                         `Start: ${unit.start.toDate().toLocaleDateString()}`,
                         `Finish: ${unit.finish.toDate().toLocaleDateString()}`,
                       ])
@@ -109,7 +109,7 @@ const UserBars: FC<UserBarsProps> = ({
                     onMouseEnter={() => {
                       setDisplay([
                         `Class: ${child.name}`,
-                        `Average: ${unit.average}`,
+                        `Average: ${unit.average / 3600} hours`,
                         `Month: ${unit.month}`,
                       ])
                     }}
