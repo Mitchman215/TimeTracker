@@ -66,8 +66,8 @@ const ModalBar: FC<ModalBarProps> = ({
       className="w-full bg-purple-700 h-full flex flex-row gap-4 justify-center items-center rounded-lg"
       onClick={checkAppear}
     >
-      <div className="text-sm">{name}</div>
-      {check && <div className="font-bold text-xs">Added</div>}
+      <div className="text-sm text-white">{name}</div>
+      {check && <div className="font-bold text-xs text-white">Added</div>}
     </button>
   )
 }

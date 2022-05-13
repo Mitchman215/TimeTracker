@@ -99,7 +99,7 @@ const UserClassMenu: FC<UserClassMenuProps> = ({ children }) => {
           <div className="px-16 py-4 w-full h-full flex items-end flex-row relative">
             <div className="font-bold absolute inset-y-0 left-2 w-10 flex justify-center items-center">
               <div className="font-bold text-xs -rotate-90" id="user-y-axis">
-                Duration(s)
+                Duration
               </div>
             </div>
             <TimeBar

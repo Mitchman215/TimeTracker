@@ -73,14 +73,16 @@ const CompGraphLayout: FC<CompGraphLayoutProps> = ({ children, type }) => {
           </div>
           <div className="flex flex-col p-4 w-full gap-2 overflow-y-scroll">
             {children.map((child: DptClassDoc) => {
-              return (
-                <ModalBar
-                  name={child.name}
-                  child={child}
-                  setEditChildren={setEditChildren}
-                  children={editChildren.slice()}
-                />
-              )
+              if (parseInt(child.total_time) > 0) {
+                return (
+                  <ModalBar
+                    name={child.name}
+                    child={child}
+                    setEditChildren={setEditChildren}
+                    children={editChildren.slice()}
+                  />
+                )
+              }
             })}
           </div>
           <button
