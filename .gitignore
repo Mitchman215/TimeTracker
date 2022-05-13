@@ -2,6 +2,7 @@
 **/.idea
 
 /backend/target
+/backend/secret
 **/.mvn-classpath
 **/.classpath
 **/.project

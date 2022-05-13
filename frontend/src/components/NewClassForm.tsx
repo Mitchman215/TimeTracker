@@ -1,5 +1,6 @@
 import { FormEvent, useState } from 'react'
 import { addNewClass } from '../models/ClassesDb'
+import User from '../models/User'
 
 // type for a status message
 interface Status {
@@ -7,7 +8,12 @@ interface Status {
   isError: boolean
 }
 
-function NewClassForm() {
+interface NewClassFormProps {
+  // if the user is specified, will add the class to the user upon success
+  user?: User
+}
+
+function NewClassForm({ user }: NewClassFormProps) {
   // state variables for a new class and its department inputted by the user
   const [newClassDepartment, setNewClassDepartment] = useState('')
   const [newClassNum, setNewClassNum] = useState('')
@@ -41,15 +47,22 @@ function NewClassForm() {
         newClassName
       )
       if (result.ok) {
+        const newClassId = result.val
         // adding new class succeeded
         setNewClassStatus({
-          message: `Successfully created a class with id "${result.val}"`,
+          message: `Successfully created a class with id "${newClassId}"`,
           isError: false,
         })
 
+        // reset input fields
         setNewClassDepartment('')
         setNewClassNum('')
         setNewClassName('')
+
+        // add the class to the user if they are specified
+        if (user) {
+          user.addClass(newClassId, newClassName)
+        }
       } else {
         // adding new class failed
         console.log({ error: result.val })

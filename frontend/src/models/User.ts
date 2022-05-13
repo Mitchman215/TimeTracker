@@ -17,12 +17,15 @@ import { db } from '../firebase'
 import { defaultPomSettings, PomSettings } from './PomSettings'
 import { User as AuthUser } from 'firebase/auth'
 import UserClass, { classConverter } from './UserClass'
+import UserRecord from './UserRecord'
 
 // Represents a user's data. Mirrors user data in firestore
 export default class User {
   readonly recordsRef: CollectionReference<DocumentData>
 
+  // depreciated, use typedClassesRef
   readonly classesRef: CollectionReference<DocumentData>
+  // only dependency in UserRecordsRoute
 
   readonly typedClassesRef: CollectionReference<UserClass>
 
@@ -44,42 +47,53 @@ export default class User {
   // also ideally have functions for retrieving subcollections, maybe implementing caching
 
   // save a record of a study session to the firestore db
-  async logRecord(classId: string, startTime: Date, timeStudied: number) {
+  async logRecord(
+    classId: string,
+    startTime: Date,
+    timeStudied: number,
+    assignment?: string
+  ) {
     const finishTime = new Date()
     console.log(`Logging new record for the class "${classId}`)
-    console.log({ classId, startTime, timeStudied, finishTime })
-    await addDoc(this.recordsRef, {
+    const docToAdd: UserRecord = {
       class: doc(db, 'classes', classId),
       class_name: classId,
       start: startTime,
       finish: finishTime,
       duration: timeStudied,
-    })
+    }
+    if (assignment && assignment.length !== 0) {
+      docToAdd.assignment = assignment
+    }
+    console.log({ docToAdd })
+    await addDoc(this.recordsRef, docToAdd)
   }
 
   // returns the ids of all the classes a user is taking
   async getClasses(): Promise<string[]> {
     console.log('getting classes')
-    const docs = await getDocs(query(this.classesRef))
+    const docs = await getDocs(query(this.typedClassesRef))
     const classes = docs.docs.map((s) => s.id)
     console.log({ classes })
     return classes
   }
 
-  async enrollInExistingClass() {
-    // todo: implement maybe
+  async addClass(classId: string, className: string) {
+    // TODO: implement with code from UserClasses
+    // TODO: refactor UserClasses to use this new function
+    console.log(`request made to add class "${classId}", not implemented yet`)
   }
 
   // delete class from user's classes subcollection
   async deleteClass(classId: string) {
     console.log(`Deleting ${classId} from user's classes`)
-    return deleteDoc(doc(db, this.classesRef.path, classId))
+    return deleteDoc(doc(db, this.typedClassesRef.path, classId))
     // note: cloud function should deal with deleting all the user's records for that class
   }
 
   // saves new settings to firestore
   async saveNewSettings(newSettings: PomSettings) {
-    updateDoc(doc(db, 'users', this.uid), {
+    return updateDoc(doc(db, 'users', this.uid), {
       pom_settings: newSettings,
     })
   }

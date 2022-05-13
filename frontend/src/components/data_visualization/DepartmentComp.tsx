@@ -13,7 +13,7 @@ import CompGraphLayout from '../dpt_class_comparison/CompGraphLayout'
  * Scrapes the information from firebase on all databases and displays it
  * @returns A layout for comparison
  */
-const DepartmentComp = () => {
+function DepartmentComp() {
   const dptRef = collection(db, 'departments')
 
   const [dptValue] = useCollection(query(dptRef))
@@ -27,9 +27,12 @@ const DepartmentComp = () => {
   if (dptDocs !== undefined) {
     for (let i = 0; i < dptDocs?.length; i++) {
       try {
-        const dptChild: DptClassDoc = dptDocs[i].data() as DptClassDoc
-        dptChild.added = false
-        dptChildren.push(dptChild)
+        // ignore metadata document
+        if (dptDocs[i].id !== '_meta') {
+          const dptChild: DptClassDoc = dptDocs[i].data() as DptClassDoc
+          dptChild.added = false
+          dptChildren.push(dptChild)
+        }
       } catch (error) {
         console.log(error)
       }

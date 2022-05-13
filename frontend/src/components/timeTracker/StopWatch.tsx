@@ -8,7 +8,7 @@ interface StopWatchProps {
   currentAssignment: string
 }
 
-function StopWatch({ currentClass }: StopWatchProps) {
+function StopWatch({ currentClass, currentAssignment }: StopWatchProps) {
   // get the user from the context
   const user = useContext(UserContext)
   if (user === null) {
@@ -60,17 +60,16 @@ function StopWatch({ currentClass }: StopWatchProps) {
     )
   }
 
-  //when log study time is pressed
-  function logRecord() {
-    const timeStudied = seconds + 60 * minutes + 3600 * hours
-    user?.logRecord(currentClass, startTime, timeStudied)
+  function handleReset() {
     reset(undefined, false)
     setStarted(false)
   }
 
-  function handleReset() {
-    reset(undefined, false)
-    setStarted(false)
+  //when log study time is pressed
+  function logRecord() {
+    const timeStudied = seconds + 60 * minutes + 3600 * hours
+    user?.logRecord(currentClass, startTime, timeStudied, currentAssignment)
+    handleReset()
   }
 
   // eslint-disable-next-line prettier/prettier
@@ -84,10 +83,10 @@ function StopWatch({ currentClass }: StopWatchProps) {
       </div>
       <span>
         {startPauseResumeButton}
-        <button className="btn-purple" onClick={logRecord} id="log-button">
+        <button hidden={!started} className="btn-purple" onClick={logRecord}>
           Log Study Time
         </button>
-        <button className="btn-purple" onClick={handleReset} id="reset-button">
+        <button hidden={!started} className="btn-purple" onClick={handleReset}>
           Reset
         </button>
       </span>

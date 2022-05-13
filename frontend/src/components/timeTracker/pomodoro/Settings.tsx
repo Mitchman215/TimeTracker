@@ -90,6 +90,7 @@ function Settings({ user }: UserProp) {
       <button
         className="text-2xl text-neutral-100"
         onClick={() => setIsOpen(true)}
+        id="open-settings-button"
       >
         <IoMdSettings />
       </button>
@@ -98,7 +99,11 @@ function Settings({ user }: UserProp) {
           <form className="w-96">
             <div className="flex flex-row justify-between mb-2">
               <h1 className="text-3xl text-bold">Settings</h1>
-              <button className="text-3xl" onClick={closeSettings}>
+              <button
+                className="text-3xl"
+                onClick={closeSettings}
+                id="close-settings-button"
+              >
                 <MdClose />
               </button>
             </div>
@@ -109,18 +114,21 @@ function Settings({ user }: UserProp) {
                 value={workTime}
                 setValue={setWork}
                 default={defaultWork / 60}
+                id="work-input"
               />
               <NumInput
                 name="Short Break"
                 value={shortBreakTime}
                 setValue={setShortBreak}
                 default={defaultSBreak / 60}
+                id="sBreak-input"
               />
               <NumInput
                 name="Long Break"
                 value={longBreakTime}
                 setValue={setLongBreak}
                 default={defaultLBreak / 60}
+                id="lBreak-input"
               />
             </div>
             <h2 className="text-xl">Other settings</h2>
@@ -132,6 +140,7 @@ function Settings({ user }: UserProp) {
               min={1}
               max={1000}
               isInt={true}
+              id="numPoms-input"
             />
 
             <div className="flex mt-4">
@@ -139,6 +148,7 @@ function Settings({ user }: UserProp) {
                 className="btn-purple"
                 onClick={saveSettings}
                 type="submit"
+                id="save-settings-button"
               >
                 Save and close
               </button>

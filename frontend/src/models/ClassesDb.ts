@@ -2,11 +2,23 @@ import { doc, getDoc, setDoc } from 'firebase/firestore'
 import { db } from '../firebase'
 import { Ok, Err, Result } from 'ts-results'
 
-// TODO: expand to contain all departments
-const validDepartmentCodes = ['CSCI', 'MATH', 'MCM', 'EDUC', 'APMA']
+let validDepartmentCodes: string[] = []
 
 // determine if a code represents a department at Brown
-function isValidDepartment(code: string): boolean {
+async function isValidDepartment(code: string): Promise<boolean> {
+  // load in department codes if they aren't loaded already
+  if (validDepartmentCodes.length === 0) {
+    const metaDoc = await getDoc(doc(db, 'departments', '_meta'))
+    const codes: string[] | undefined = metaDoc.data()?.all_codes
+    if (codes) {
+      validDepartmentCodes = codes
+    } else {
+      console.error(
+        `Departments' "_meta" doc either doesn't exist or doesn't have "all_codes" field.` +
+          ` Run the backend "add-departments" script to fix.`
+      )
+    }
+  }
   return validDepartmentCodes.includes(code)
 }
 
@@ -39,7 +51,7 @@ export async function addNewClass(
   courseNumber = courseNumber.toUpperCase().trim()
   name = name.trim()
   // check args are validly formatted
-  if (!isValidDepartment(department)) {
+  if (!(await isValidDepartment(department))) {
     return Err(new Error(`"${department}" is not a valid department code`))
   } else if (!isValidCourseNumber(courseNumber)) {
     return Err(new Error(`"${courseNumber}" is not a valid course number`))

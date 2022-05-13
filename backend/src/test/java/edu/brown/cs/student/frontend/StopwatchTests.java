@@ -12,7 +12,6 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.support.Color;
-/**
 public class StopwatchTests {
     private ChromeDriver driver;
     
@@ -178,13 +177,8 @@ public class StopwatchTests {
       }
     }
 
-    
-
-    
-
     @After
     public void quitDriver() {
       driver.quit();
     }
 }
-*/

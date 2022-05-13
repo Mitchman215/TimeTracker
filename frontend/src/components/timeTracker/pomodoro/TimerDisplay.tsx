@@ -43,17 +43,21 @@ export default function TimerDisplay({ timer, pomStage }: TimerDisplayProp) {
   switch (pomStage) {
     case Stage.ShortBreak:
       timeDisplay = (
-        <div className="bg-blue-medium time-display">{timerDisplayString}</div>
+        <div className="bg-blue-medium time-display" id="time">
+          {timerDisplayString}
+        </div>
       )
       break
     case Stage.LongBreak:
       timeDisplay = (
-        <div className="bg-blue-dark time-display">{timerDisplayString}</div>
+        <div className="bg-blue-dark time-display" id="time">
+          {timerDisplayString}
+        </div>
       )
       break
     default:
       timeDisplay = (
-        <div className="bg-orange-medium time-display">
+        <div className="bg-orange-medium time-display" id="time">
           {timerDisplayString}
         </div>
       )
@@ -65,7 +69,7 @@ export default function TimerDisplay({ timer, pomStage }: TimerDisplayProp) {
     case TimerState.NotStarted:
       // show start button
       startPauseResumeButton = (
-        <button className="btn-purple" onClick={timer.start}>
+        <button className="btn-purple" onClick={timer.start} id="start-button">
           Start
         </button>
       )
@@ -73,7 +77,7 @@ export default function TimerDisplay({ timer, pomStage }: TimerDisplayProp) {
     case TimerState.Running:
       // show pause button
       startPauseResumeButton = (
-        <button className="btn-purple" onClick={timer.pause}>
+        <button className="btn-purple" onClick={timer.pause} id="pause-button">
           Pause
         </button>
       )
@@ -81,7 +85,11 @@ export default function TimerDisplay({ timer, pomStage }: TimerDisplayProp) {
     case TimerState.Paused:
       // show resume button
       startPauseResumeButton = (
-        <button className="btn-purple" onClick={timer.resume}>
+        <button
+          className="btn-purple"
+          onClick={timer.resume}
+          id="resume-button"
+        >
           Resume
         </button>
       )
@@ -97,12 +105,14 @@ export default function TimerDisplay({ timer, pomStage }: TimerDisplayProp) {
       hidden={timer.state === TimerState.NotStarted}
       onClick={timer.finish}
       className="btn-purple"
+      id="finish-button"
     >
       Finish Early
     </button>
   )
 
   async function onStopClick() {
+    const initialState: TimerState = timer.state
     // confirmation dialog to make sure user wants to stop
     timer.pause()
     const stop = await confirm(
@@ -110,7 +120,7 @@ export default function TimerDisplay({ timer, pomStage }: TimerDisplayProp) {
     )
     if (stop) {
       timer.stop()
-    } else {
+    } else if (initialState !== TimerState.Paused) {
       timer.resume()
     }
   }
@@ -120,6 +130,7 @@ export default function TimerDisplay({ timer, pomStage }: TimerDisplayProp) {
       hidden={timer.state === TimerState.NotStarted}
       onClick={onStopClick}
       className="btn-purple"
+      id="stop-button"
     >
       Stop
     </button>
