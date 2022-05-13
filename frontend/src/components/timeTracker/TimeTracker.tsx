@@ -83,6 +83,7 @@ function TimeTracker() {
     <select
       className="text-2xl p-1 rounded-sm font-semibold shadow-md"
       onChange={handleModeSelect}
+      id="mode-selector"
     >
       {optionFor(Mode.Stopwatch)}
       {optionFor(Mode.PomTimer)}

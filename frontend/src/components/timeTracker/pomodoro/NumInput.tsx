@@ -8,13 +8,14 @@ interface NumInputProps {
   min?: number
   max?: number
   isInt?: boolean
+  id?: string
 }
 
 // A time input field for the pomodoro settings form
 function NumInput(props: NumInputProps) {
   // when the component first loads, if the initial value is empty, set it to the default
   useEffect(() => {
-    if (props.value === '' && props.default !== undefined) {
+    if (!props.value && props.default !== undefined) {
       props.setValue(props.default.toString())
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -28,6 +29,7 @@ function NumInput(props: NumInputProps) {
     // allow empty input
     if (!val) {
       props.setValue(val)
+      return
     }
     // if min isn't specified, make it 0
     const min = props.min ? props.min : 0
@@ -49,6 +51,7 @@ function NumInput(props: NumInputProps) {
         value={props.value}
         onChange={handleChange}
         className="bg-slate-100 p-1 w-24"
+        id={props.id}
       />
     </label>
   )

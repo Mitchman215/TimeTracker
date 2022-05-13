@@ -44,7 +44,6 @@ function Pomodoro({ user, currentClass, currentAssignment }: PomodoroProp) {
         if (pomsFinished + 1 >= defaultNumPoms) {
           // user has finished set of pomodoros, take a long break
           setStage(Stage.LongBreak)
-          setPomsFinished(0)
         } else {
           // user not done with set yet, take short break
           setStage(Stage.ShortBreak)
@@ -63,6 +62,7 @@ function Pomodoro({ user, currentClass, currentAssignment }: PomodoroProp) {
         console.log('Long break done!')
         setStage(Stage.NotStarted)
         setStartTime(new Date())
+        setPomsFinished(0)
         break
       case Stage.NotStarted:
         console.error(`Can't end the pomodoro timer without starting it`)
@@ -168,8 +168,12 @@ function Pomodoro({ user, currentClass, currentAssignment }: PomodoroProp) {
   return (
     <div className="flex flex-col items-center">
       <span className="flex flex-row items-center bg-orange-light text-white font-semibold">
-        <h2 className="px-2 text-2xl mt-2">{titleString}</h2>
-        <h3 className="px-2 text-xl text-neutral-100">#Poms: {pomsFinished}</h3>
+        <h2 className="px-2 text-2xl mt-2" id="stage-message">
+          {titleString}
+        </h2>
+        <h3 className="px-2 text-xl text-neutral-100" id="pom-count">
+          #Poms: {pomsFinished}
+        </h3>
         {curStage === Stage.NotStarted && <Settings user={user} />}
       </span>
       <TimerDisplay timer={timer} pomStage={curStage} />
