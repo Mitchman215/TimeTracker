@@ -50,7 +50,7 @@ const UserBars: FC<UserBarsProps> = ({
                     onMouseEnter={() => {
                       setDisplay([
                         `Class: ${child.name}`,
-                        `Average: ${unit.average / 60} hours`,
+                        `Average: ${(unit.average / 3600).toFixed(1)} hours`,
                         `Day: ${unit.day.toDate().toLocaleDateString()}`,
                       ])
                     }}
@@ -59,7 +59,7 @@ const UserBars: FC<UserBarsProps> = ({
                     }}
                     className="w-full bg-purple-800 hover:bg-purple-500"
                     sx={{
-                      height: unit.average / 20,
+                      height: (unit.average / 3600) * 25,
                     }}
                   />
                 )
@@ -79,7 +79,7 @@ const UserBars: FC<UserBarsProps> = ({
                     onMouseEnter={() => {
                       setDisplay([
                         `Class: ${child.name}`,
-                        `Average: ${unit.average / 60} Hours`,
+                        `Average: ${(unit.average / 3600).toFixed(1)} Hours`,
                         `Start: ${unit.start.toDate().toLocaleDateString()}`,
                         `Finish: ${unit.finish.toDate().toLocaleDateString()}`,
                       ])
@@ -89,7 +89,7 @@ const UserBars: FC<UserBarsProps> = ({
                     }}
                     className="w-full bg-purple-800 hover:bg-purple-500"
                     sx={{
-                      height: unit.average / 100,
+                      height: (unit.average / 3600) * 5,
                     }}
                   />
                 )
@@ -109,7 +109,7 @@ const UserBars: FC<UserBarsProps> = ({
                     onMouseEnter={() => {
                       setDisplay([
                         `Class: ${child.name}`,
-                        `Average: ${unit.average / 60} hours`,
+                        `Average: ${(unit.average / 3600).toFixed(1)} hours`,
                         `Month: ${unit.month}`,
                       ])
                     }}
@@ -118,7 +118,7 @@ const UserBars: FC<UserBarsProps> = ({
                     }}
                     className="w-full bg-purple-800 hover:bg-purple-500"
                     sx={{
-                      height: unit.average / 750,
+                      height: (unit.average / 3600) * 5,
                     }}
                   />
                 )

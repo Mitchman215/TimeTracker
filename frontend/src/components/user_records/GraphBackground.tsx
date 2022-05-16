@@ -51,7 +51,7 @@ const GraphBackground: FC<GraphBackgroundProps> = ({
             return (
               <Bars
                 key={child.uid}
-                size={child.duration / 100}
+                size={child.duration}
                 className={child.class_name}
                 startStamp={child.start.toDate().toLocaleString()}
                 finishStamp={child.finish.toDate().toLocaleString()}

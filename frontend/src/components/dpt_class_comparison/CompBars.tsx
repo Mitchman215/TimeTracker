@@ -45,9 +45,9 @@ const CompBars: FC<CompBarsProps> = ({
       className="flex flex-col items-end w-full"
       onMouseEnter={() => {
         setName(name)
-        setDailyAvg((dailyAvg / 60).toString() + ' hours')
-        setWeeklyAvg((weeklyAvg / 60).toString() + ' hours')
-        setTotalTime((totalTime / 60).toString() + ' hours')
+        setDailyAvg((dailyAvg / 3600).toFixed(1).toString() + ' hours')
+        setWeeklyAvg((weeklyAvg / 3600).toFixed(1).toString() + ' hours')
+        setTotalTime((totalTime / 3600).toFixed(1).toString() + ' hours')
         setBGT('#A3A3A3')
         setBGM('#525252')
         setBGB('#171717')
@@ -75,17 +75,17 @@ const CompBars: FC<CompBarsProps> = ({
       <Box
         className="w-full"
         sx={{
-          height: totalTime - weeklyAvg * 5 - dailyAvg * 5,
+          height: (totalTime / 3600) * 5,
           backgroundColor: backgroundColorTop,
         }}
       />
       <div className="w-full items-center justify-center flex text-xs font-bold">
-        Weekly Average (5x magnified)
+        Weekly Average
       </div>
       <Box
         className="w-full"
         sx={{
-          height: weeklyAvg * 5 - dailyAvg * 5,
+          height: (weeklyAvg / 3600) * 5,
           backgroundColor: backgroundColorM,
         }}
       />
@@ -95,7 +95,7 @@ const CompBars: FC<CompBarsProps> = ({
       <Box
         className="w-full"
         sx={{
-          height: dailyAvg * 5,
+          height: (dailyAvg / 3600) * 25,
           backgroundColor: backgroundColorBot,
         }}
       />

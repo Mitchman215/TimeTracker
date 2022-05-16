@@ -43,7 +43,7 @@ const Bars: FC<BarsProps> = ({
         setClassName(className)
         setStartStamp(startStamp)
         setFinishStamp(finishStamp)
-        setDuration(((size * 100) / 60).toString() + ' hours')
+        setDuration((size / 3600).toFixed(1).toString() + ' hours')
       }}
       onMouseLeave={() => {
         setClassName('')
@@ -53,7 +53,7 @@ const Bars: FC<BarsProps> = ({
       }}
       className="bg-violet-900 hover:bg-violet-600 w-full"
       sx={{
-        height: size,
+        height: size / 3600,
       }}
     />
   )
