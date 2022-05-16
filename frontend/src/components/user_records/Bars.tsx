@@ -43,7 +43,7 @@ const Bars: FC<BarsProps> = ({
         setClassName(className)
         setStartStamp(startStamp)
         setFinishStamp(finishStamp)
-        setDuration((size / 60).toString() + ' hours')
+        setDuration(((size * 100) / 60).toString() + ' hours')
       }}
       onMouseLeave={() => {
         setClassName('')
