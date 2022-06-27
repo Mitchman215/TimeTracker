@@ -15,6 +15,7 @@
     "firebase": "^9.6.11",
     "firebaseui": "^6.0.1",
     "leven": "^4.0.0",
+    "next": "^12.2.0",
     "react": "^18.0.0",
     "react-confirm-box": "^1.2.0",
     "react-datetime-picker": "^3.5.0",
@@ -31,10 +32,10 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
   },
   "eslintConfig": {
     "extends": [
@@ -64,6 +65,7 @@
     "eslint": "^8.13.0",
     "eslint-config-airbnb": "^19.0.4",
     "eslint-config-airbnb-typescript": "^17.0.0",
+    "eslint-config-next": "^12.2.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-jest": "^26.1.4",

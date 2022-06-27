@@ -18,9 +18,11 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "jsx": "react-jsx"
+    "jsx": "preserve",
+    "incremental": true
   },
   "include": [
-    "src"
-, "src/firebase", "src/firebase/clientApp.ts"  ]
+    "src", "src/firebase", "src/firebase/clientApp.ts", "next-env.d.ts", "**/*.ts", "**/*.tsx"
+  ],
+  "exclude": ["node_modules"]
 }
