@@ -19,7 +19,7 @@ export default function Nav() {
         <Link to="/timetracker">
           <div className="text-center">
             <div className="bg-white rounded-full w-12 h-12 m-auto mb-2">
-              <img src={clock} />
+              <img src={String(clock)} />
             </div>
             <div className="btn-white">Start Studying</div>
           </div>

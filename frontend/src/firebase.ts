@@ -20,9 +20,9 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig)
-const analytics = getAnalytics(app)
+// const analytics = getAnalytics(app)
 const db = getFirestore(app)
 // connectFirestoreEmulator(db, 'localhost', 8080)
 const auth = getAuth(app)
 
-export { app, analytics, db, auth }
+export { app, db, auth }

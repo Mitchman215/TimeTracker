@@ -2,8 +2,7 @@ import { GoogleAuthProvider } from 'firebase/auth'
 import { auth } from '../firebase'
 import clock from '../images/clock.png'
 import logo from '../images/BrownLogo.png'
-import React from 'react'
-import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth'
+import StyledFirebaseAuth from './StyledFirebaseAuth'
 
 // Configure FirebaseUI.S
 const uiConfig = {
@@ -29,10 +28,10 @@ function SignIn() {
           Time Tracker Login:
         </div>
         <div className="bg-white rounded-full w-12 h-12">
-          <img src={logo} />
+          <img src={String(logo)} />
         </div>
         <div className="bg-white rounded-full w-12 h-20">
-          <img src={clock} />
+          <img src={String(clock)} />
         </div>
         <h1 className="text-black font-bold h-12">
           Please sign in below using your Brown Gmail account
