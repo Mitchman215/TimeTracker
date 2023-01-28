@@ -1,5 +1,4 @@
-import { Route, Routes } from 'react-router-dom'
-import Auth from '../routes/Auth'
+import Auth from '../pages/Auth'
 
 interface SignInPageProp {
   message?: string
@@ -14,9 +13,7 @@ function SignInPage({ message }: SignInPageProp) {
         </header>
       )}
       <main className="mt-8">
-        <Routes>
-          <Route path="*" element={<Auth />} />
-        </Routes>
+        <Auth />
       </main>
     </div>
   )
